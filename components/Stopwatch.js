@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react'
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native'
 import moment from 'moment'
 
 
@@ -238,6 +238,6 @@ const styles = StyleSheet.create({
   },
   timerContainer: {
     flexDirection: 'row',
-    backgroundColor: '#c1c1c1'
+    backgroundColor: '#c1c1c1',
   }
 })
