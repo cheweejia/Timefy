@@ -24,7 +24,7 @@ function AlarmManager(props) {
     };
 
     const handleConfirm = (date) => {
-        console.warn("Alarmed set at", getTime(date));
+        //console.warn("Alarmed set at", getTime(date));
         handleNewAlarm(getTime(date), getDate(date));
         hideDatePicker();
     };
