@@ -1,7 +1,7 @@
 # Timefy
-Timefy is a tool that helps you manage your limited time better, so that you can lead a happier and healthier life.
+Timefy aims to help you manage your limited time better, so that you can lead a happier and healthier life.
 
-We hope to achieve that by developing an app that ensures you wake up on time, improves your sleep quality, and helps you boost your productivity.
+We hope to achieve our aim by developing an app that ensures you wake up on time, improves your sleep quality, and helps you boost your productivity.
 
 ## Getting Started
 
