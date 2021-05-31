@@ -15,11 +15,11 @@ Using your command line, navigate to the same folder.
 
 Install the following:
 
+yarn (preferred)
+```yarn install```
+
 npm
 ```npm install @react-navigation/native @react-navigation/bottom-tabs react-native-elements @react-native-community/datetimepicker react-native-modal-datetime-picker react-native-countdown-circle-timer moment```
-
-yarn
-```yarn add @react-navigation/native @react-navigation/bottom-tabs react-native-elements @react-native-community/datetimepicker react-native-modal-datetime-picker react-native-countdown-circle-timer moment```
 
 #### Using An Android Device
 
