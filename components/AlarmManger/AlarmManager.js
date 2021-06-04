@@ -146,8 +146,8 @@ function AlarmManager(props) {
             </ScrollView>
 
             <AlarmSetting
-                alarmIndex = {alarmIndex}
-                setAlarmIndex = {setAlarmIndex}
+                alarmIndex={alarmIndex}
+                setAlarmIndex={setAlarmIndex}
                 alarmSettingVisible={alarmSettingVisible}
                 setAlarmSettingVisible={setAlarmSettingVisible}
             />

@@ -1769,10 +1769,10 @@
     sudo-prompt "^9.0.0"
     wcwidth "^1.0.1"
 
-"@react-native-community/datetimepicker@^3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-3.5.0.tgz#f0e9443990b997589b565bb2f04dbb170ecc30dc"
-  integrity sha512-d+qI4iQYnB5ekA6hhMzoWjNGLWju+zG/T5kXZrfx+XtSeU0HB8flGNJwWOZc8pDAdKatrDHkfwtGb4wZ0aNjKg==
+"@react-native-community/datetimepicker@^3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-3.5.2.tgz#8e6feb30f2620e5abdf565d5fe74c0c04edcf6ae"
+  integrity sha512-TWRuAtr/DnrEcRewqvXMLea2oB+YF+SbtuYLHguALLxNJQLl/RFB7aTNZeF+OoH75zKFqtXECXV1/uxQUpA+sg==
   dependencies:
     invariant "^2.2.4"
 
@@ -5247,6 +5247,11 @@ react-native-countdown-circle-timer@^2.5.3:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/react-native-countdown-circle-timer/-/react-native-countdown-circle-timer-2.5.3.tgz#f4200dbd0b6747551cdb9f071d128602de656932"
   integrity sha512-+L3PVJ+aPpL6FOOGELoG6LofQ5JsRmPfDOwxMi6S/SqEF9ZybjhwvR6Vv/FdQXtNpvBt7Yvw6KSFxLLbQmgQRA==
+
+react-native-date-picker@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-3.3.1.tgz#1f8b0712967c1e01257d32bab759aa64d6ffb601"
+  integrity sha512-9784eFZtxGooIitLSpDRrjWuJzc6vSmQzubZTzLRxMDHIHt2wlAep3QxVMFKj1SSPXNBjM4vY8CbkJXFlYgSNQ==
 
 react-native-elements@^3.4.1:
   version "3.4.1"
