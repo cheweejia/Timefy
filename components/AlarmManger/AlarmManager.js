@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
 import { getTime, getDate, timeEqual } from "../TimeTools";
+import TimeWheel from './TimeWheel';
 import AlarmSetting from './AlarmSetting';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
@@ -47,25 +48,25 @@ function AlarmManager(props) {
     const showAllAlarm = (listOfAlarm) => {
         return (
             listOfAlarm.map((alarm, index) => (
-                <>
-                    <View key={index} style={styles.checkbox} >
-                        <TouchableOpacity style={styles.alarmtext2}
-                            onPress={() => openAlarmSettings(index)
-                            }>
-                            <Text style={styles.alarmtext3}>
-                                {alarm.time + ", " + alarm.date}
 
-                            </Text>
-                        </TouchableOpacity>
-                        <CheckBox
-                            key={index}
-                            center='true'
-                            onIconPress={() => toggleAlarm(alarm, index)}
-                            checked={alarm.isOn}
-                            checkedColor='white'
-                        />
-                    </View>
-                </>
+                <View key={index} style={styles.checkbox} >
+                    <TouchableOpacity style={styles.alarmtext2}
+                        onPress={() => openAlarmSettings(index)
+                        }>
+                        <Text style={styles.alarmtext3}>
+                            {alarm.time + ", " + alarm.date}
+
+                        </Text>
+                    </TouchableOpacity>
+                    <CheckBox
+                        key={index}
+                        center='true'
+                        onIconPress={() => toggleAlarm(alarm, index)}
+                        checked={alarm.isOn}
+                        checkedColor='white'
+                    />
+                </View>
+
 
             ))
         );
@@ -99,7 +100,6 @@ function AlarmManager(props) {
         setAlarmSettingVisible(true);
         setAlarmIndex(index)
     }
-
 
     //////////////////////////////////////////////////////////////
     return (
@@ -199,8 +199,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'stretch',
         alignItems: 'center',
-
-
+    },
+    clock: {
+        flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+        alignItems: 'center',
     },
     top: {
         flex: 0.3,

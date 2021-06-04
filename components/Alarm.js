@@ -2,6 +2,7 @@ import React, { useEffect, useState, } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import TimeTools, { getTime, getDate, timeEqual, timeEqual2 } from "./TimeTools";
 import AlarmManager from './AlarmManger/AlarmManager';
+import Clock from "./Clock";
 
 function Alarm() {
 
@@ -47,7 +48,11 @@ function Alarm() {
 
     return (
         <>
-            <View style={styles.clock}>
+            {/* <View style={styles.clock}>
+                <Clock />
+            </View> */}
+            <View style={styles.timedate}>
+                <Clock />
 
                 <Text style={styles.timeFont}>
                     {checkAlarm()}
@@ -73,13 +78,20 @@ function Alarm() {
 
 
 const styles = StyleSheet.create({
-    clock: {
-        paddingTop: 80,
+    timedate: {
+        paddingTop: 130,
         flex: 1.3,
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: -40
+        marginBottom: -20
+    },
+    clock: {
+        paddingTop: 80,
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     manager: {
         flex: 2,
