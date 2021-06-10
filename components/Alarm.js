@@ -1,9 +1,9 @@
 import React, { useEffect, useState, } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import TimeTools, { getTime, getDate, timeEqual, timeEqual2 } from "./TimeTools";
-import AlarmManager from './AlarmManger/AlarmManager';
+import AlarmManager from './AlarmManager/AlarmManager';
 import Clock from "./Clock";
-import TimeWheel from "./AlarmManger/TimeWheel"
+import TimeWheel from './AlarmManager/TimeWheel';
 //import { Picker, DatePicker } from 'react-native-wheel-pick';
 
 function Alarm() {
@@ -48,7 +48,7 @@ function Alarm() {
     };
 
     const [timeWheelVisible, setTimeWheelVisible] = useState(false);
-    const [quickSetAlarmTime, setQuickSetAlarmTime] = useState("00:00");
+    const [quickSetAlarmTime, setQuickSetAlarmTime] = useState("00:00:00");
 
 
     const toggleTimeWheel = () => {

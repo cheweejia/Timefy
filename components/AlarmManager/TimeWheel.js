@@ -41,7 +41,7 @@ export default function TimeWheel(props) {
                                 const index = Math.round(ev.nativeEvent.contentOffset.y / 50)
 
                                 const min = quickSetAlarmTime.slice(3, 5);
-                                setQuickSetAlarmTime(pad(index) + ":" + min);
+                                setQuickSetAlarmTime(pad(index) + ":" + min + ":00");
                             }}
                             renderItem={({ item }) => {
                                 const pad = (n) => n < 10 ? '0' + n : n
@@ -72,7 +72,7 @@ export default function TimeWheel(props) {
                                 const index = Math.round(ev.nativeEvent.contentOffset.y / 50)
                                 
                                 const hour = quickSetAlarmTime.slice(0,2);
-                                setQuickSetAlarmTime(hour + ":" + pad(index));
+                                setQuickSetAlarmTime(hour + ":" + pad(index) + ":00");
 
                             }}
                             renderItem={({ item }) => {
