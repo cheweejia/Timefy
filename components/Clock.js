@@ -1,3 +1,5 @@
+// ISSUE : how to i make sure that it rerenders when its pass 7pm ??
+
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Dimensions, Animated } from 'react-native';
 import {isDay} from '../components/TimeTools';
@@ -146,14 +148,14 @@ const styles = StyleSheet.create({
     width: SIZE * 0.8,
     height: SIZE * 0.8,
     borderRadius: SIZE * 0.4, 
-    backgroundColor: (!isDay(new Date())) ? 'rgba(255, 228, 132, 0.7)' : 'rgba(18, 47, 80, 0.3)',
+    backgroundColor: (isDay(new Date())) ? 'rgba(255, 228, 132, 0.7)' : 'rgba(18, 47, 80, 0.3)',
     position: 'absolute',
   },
   mediumQuadran: {
     width: SIZE * 0.5,
     height: SIZE * 0.5,
     borderRadius: SIZE * 0.25,
-    backgroundColor: (!isDay(new Date())) ? 'rgba(252, 150, 1, 0.6)': 'rgba(18, 47, 80, 0.7)',
+    backgroundColor: (isDay(new Date())) ? 'rgba(252, 150, 1, 0.6)': 'rgba(18, 47, 80, 0.7)',
     position: 'absolute',
   },
   smallQuadran: {

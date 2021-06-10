@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
-import { getTime, getDate, timeEqual } from "../TimeTools";
+import { getTime, getDate, compareTime } from "../TimeTools";
 import TimeWheel from './TimeWheel';
 import AlarmSetting from './AlarmSetting';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -10,7 +10,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 function AlarmManager(props) {
 
-    const { listOfAlarm, setListOfAlarm } = props;
+    const { listOfAlarm, setListOfAlarm, timeWheelVisible, 
+        quickSetAlarmTime, setQuickSetAlarmTime} = props;
 
     ////////////////////////////////////////////////////////////////////
     // TIMEPICKER MANGMENENT 
@@ -120,7 +121,12 @@ function AlarmManager(props) {
                     type="solid"
                     fontSize="20"
                     onPress={() => {
-                        showDatePicker()
+                        timeWheelVisible 
+                            ? handleNewAlarm(quickSetAlarmTime, 
+                                (compareTime(getTime(new Date()), quickSetAlarmTime) > 0) 
+                                    ? getDate(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+                                    : getDate(new Date())) 
+                            : showDatePicker()
                     }}
                 />
                 <Button

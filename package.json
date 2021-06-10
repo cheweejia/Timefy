@@ -34,6 +34,7 @@
     "react-native-segmented-picker": "^2.0.2",
     "react-native-svg": "^12.1.1",
     "react-native-web": "~0.13.12",
+    "react-native-wheel-pick": "^1.1.0",
     "react-native-wheel-picker-android": "^2.0.6"
   },
   "devDependencies": {
