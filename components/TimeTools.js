@@ -44,6 +44,8 @@ export function timeEqual(currTime, alarmTime, currDate, alarmDate){
 
 export function isDay(currDate) {
     return currDate.getHours() > 7 && currDate.getHours() < 19;
+    //return currDate.getSeconds() % 2 === 0;
+
 }
 
 // -1 if time1 <time2, 0 if time1 = time 2), 1 if (time1 > time2)

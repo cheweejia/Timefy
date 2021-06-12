@@ -1,8 +1,8 @@
 // ISSUE : how to i make sure that it rerenders when its pass 7pm ??
 
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Dimensions, Animated } from 'react-native';
-import {isDay} from '../components/TimeTools';
+import { StyleSheet, Dimensions, Animated, Text } from 'react-native';
+import { isDay } from '../components/TimeTools';
 
 const { width } = Dimensions.get('screen');
 const SIZE = width * 0.8;
@@ -41,7 +41,7 @@ function Clock() {
   const initiateClock = () => {
     const currentDate = new Date();
     // hours * 3600(1hr) * 5(1 unit) && + 1 for initial error 
-    _timer = currentDate.getHours() * 3600 * 5 + currentDate.getMinutes() *60 + currentDate.getSeconds() + 1;
+    _timer = currentDate.getHours() * 3600 * 5 + currentDate.getMinutes() * 60 + currentDate.getSeconds() + 1;
 
     //initial position
     tick.setValue(_timer);
@@ -87,12 +87,19 @@ function Clock() {
     };
   }, []);
 
+  // Customise Changable Clock Quadrant Color -> 7am -7pm day
+  const MediumQuadDynamicColorStyle = {
+    backgroundColor: (isDay(new Date())) ? 'rgba(252, 150, 1, 0.6)' : 'rgba(18, 47, 80, 0.7)'
+  }
+  const BigQuadDynamicColorStyle = {
+    backgroundColor: (isDay(new Date())) ? 'rgba(252, 150, 1, 0.6)' : 'rgba(18, 47, 80, 0.7)',
+  }
 
   return (
     <Animated.View style={styles.container}>
       <Animated.View style={styles.container}>
-        <Animated.View style={[styles.bigQuadran, { transform: [{ scale: bigQuadranScale }] }]} />
-        <Animated.View style={[styles.mediumQuadran, { transform: [{ scale: mediumQuadranScale }] }]} />
+        <Animated.View style={[styles.bigQuadran, { transform: [{ scale: bigQuadranScale }]}, BigQuadDynamicColorStyle]} />
+        <Animated.View style={[styles.mediumQuadran, { transform: [{ scale: mediumQuadranScale}]}, MediumQuadDynamicColorStyle]} />
         <Animated.View style={[styles.smallQuadran]} />
         <Animated.View style={[styles.mover, transformHours]}>
           <Animated.View style={[styles.hours]} />
@@ -147,15 +154,13 @@ const styles = StyleSheet.create({
   bigQuadran: {
     width: SIZE * 0.8,
     height: SIZE * 0.8,
-    borderRadius: SIZE * 0.4, 
-    backgroundColor: (isDay(new Date())) ? 'rgba(255, 228, 132, 0.7)' : 'rgba(18, 47, 80, 0.3)',
+    borderRadius: SIZE * 0.4,
     position: 'absolute',
   },
   mediumQuadran: {
     width: SIZE * 0.5,
     height: SIZE * 0.5,
     borderRadius: SIZE * 0.25,
-    backgroundColor: (isDay(new Date())) ? 'rgba(252, 150, 1, 0.6)': 'rgba(18, 47, 80, 0.7)',
     position: 'absolute',
   },
   smallQuadran: {
