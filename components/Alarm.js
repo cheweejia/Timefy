@@ -55,7 +55,6 @@ function Alarm() {
         setTimeWheelVisible(!timeWheelVisible);
     }
 
-
     return (
         <>
             {/* <View style={styles.clock}>
@@ -64,14 +63,16 @@ function Alarm() {
             <View style={styles.timedate}>
                 <Clock />
 
-                <TouchableOpacity onPress={() => toggleTimeWheel()}>
+                <TouchableOpacity onLongPress={() => toggleTimeWheel()}>
                     <Text style={styles.timeFont}>
                         {checkAlarm()}
-                        {!timeWheelVisible
+                        {(!timeWheelVisible)
                             ? currTime
                             : <TimeWheel
                                 quickSetAlarmTime={quickSetAlarmTime}
-                                setQuickSetAlarmTime={setQuickSetAlarmTime} />}
+                                setQuickSetAlarmTime={setQuickSetAlarmTime} 
+                                />
+                        }
                     </Text>
                 </TouchableOpacity>
                 <Text style={styles.dateFont}>

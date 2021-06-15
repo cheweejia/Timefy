@@ -13,17 +13,16 @@ const minSec = [...Array(60).keys()]
 
 export default function TimeWheel(props) {
 
-    const {quickSetAlarmTime, setQuickSetAlarmTime} = props;
-    const [hour, setHour] = useState();
-    const [min, setMin] = useState();
-
+    const { quickSetAlarmTime, setQuickSetAlarmTime } = props;
+    
     return (
         <View style={styles.container}>
             <View style={{ alignItems: 'center' }}>
                 <View style={styles.unitRow}>
                     <View style={styles.unit}>
                         <FlatList
-                            //disableVirtualization={false}
+                            //disableVirtualiz15
+                            marginTopion={false}
                             //onEndReachedThreshold={1200}
                             style={{ flexGrow: 0 }}
                             keyExtractor={(item) => item.toString()}
@@ -53,7 +52,7 @@ export default function TimeWheel(props) {
                             }}
                         />
                     </View>
-                    <Text style = {styles.colon}>:</Text>
+                    <Text style={styles.colon}>:</Text>
                     <View style={styles.unit}>
                         <FlatList
                             style={{ flexGrow: 0 }}
@@ -70,8 +69,8 @@ export default function TimeWheel(props) {
                             onMomentumScrollEnd={ev => {
                                 const pad = (n) => n < 10 ? '0' + n : n
                                 const index = Math.round(ev.nativeEvent.contentOffset.y / 50)
-                                
-                                const hour = quickSetAlarmTime.slice(0,2);
+
+                                const hour = quickSetAlarmTime.slice(0, 2);
                                 setQuickSetAlarmTime(hour + ":" + pad(index) + ":00");
 
                             }}
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     unit: {
-        width: 70,
+        width: (Dimensions.get('window').width * 0.20),
         color: '#000000',
         fontSize: 15,
         textAlign: 'center',
@@ -142,18 +141,19 @@ const styles = StyleSheet.create({
     unitRow: {
         flexDirection: 'row',
         alignSelf: 'stretch',
-        marginTop: -20,
+        // marginTop: -(Dimensions.get('window').height * 0.009),
         marginBottom: 0,
-        height: 100,
+        height: (Dimensions.get('window').height * 0.13),
     },
     text: {
         color: '#000000',
-        fontSize: 62,
+        fontSize: (Dimensions.get('window').width * 0.13),
         textAlign: 'center',
     },
     colon: {
         color: '#000000',
-        fontSize: 60,
+        marginTop: (Dimensions.get('window').height * 0.02),
+        fontSize: (Dimensions.get('window').width * 0.13),
         textAlign: 'center',
     },
 })

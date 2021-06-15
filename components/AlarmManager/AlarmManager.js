@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
 import { getTime, getDate, compareTime } from "../TimeTools";
 import TimeWheel from './TimeWheel';
 import AlarmSetting from './AlarmSetting';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import SleepCalculator from './SleepCalculator/SleepCalculator';
+import { Switch } from 'react-native-paper';
+
 
 
 
 function AlarmManager(props) {
 
-    const { listOfAlarm, setListOfAlarm, timeWheelVisible, 
-        quickSetAlarmTime, setQuickSetAlarmTime} = props;
+    const { listOfAlarm, setListOfAlarm, timeWheelVisible,
+        quickSetAlarmTime, setQuickSetAlarmTime } = props;
 
     ////////////////////////////////////////////////////////////////////
     // TIMEPICKER MANGMENENT 
@@ -44,6 +47,7 @@ function AlarmManager(props) {
             }
         ];
         setListOfAlarm(newAlarmList);
+        { !timeWheelVisible && resetQuickSetAlarm(); }
     }
 
     const showAllAlarm = (listOfAlarm) => {
@@ -59,13 +63,21 @@ function AlarmManager(props) {
 
                         </Text>
                     </TouchableOpacity>
-                    <CheckBox
+                    <Switch
+                        key = {index}
+                        color = 'pink' 
+                        value={alarm.isOn}
+                        onValueChange = {
+                            () => toggleAlarm(alarm, index)
+                        }
+                    />
+                    {/* <CheckBox
                         key={index}
                         center='true'
                         onIconPress={() => toggleAlarm(alarm, index)}
                         checked={alarm.isOn}
                         checkedColor='white'
-                    />
+                    /> */}
                 </View>
 
 
@@ -103,6 +115,13 @@ function AlarmManager(props) {
     }
 
     //////////////////////////////////////////////////////////////
+    //TimeWheel Setting 
+
+    const resetQuickSetAlarm = () => {
+        setQuickSetAlarmTime('00:00:00');
+        return true;
+    }
+    //////////////////////////////////////////////////////////////
     return (
         <>
             <DateTimePickerModal
@@ -117,22 +136,28 @@ function AlarmManager(props) {
             <View style={styles.button}>
                 <Button
                     color="blue"
-                    title="Set Alarm"
-                    type="solid"
+                    title="Set"
+                    type="outline"
                     fontSize="20"
                     onPress={() => {
-                        timeWheelVisible 
-                            ? handleNewAlarm(quickSetAlarmTime, 
-                                (compareTime(getTime(new Date()), quickSetAlarmTime) > 0) 
+                        timeWheelVisible
+                            ? handleNewAlarm(quickSetAlarmTime,
+                                (compareTime(getTime(new Date()), quickSetAlarmTime) > 0)
                                     ? getDate(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
-                                    : getDate(new Date())) 
+                                    : getDate(new Date()))
                             : showDatePicker()
                     }}
                 />
+                <SleepCalculator
+                    timeWheelVisible={timeWheelVisible}
+                    quickSetAlarmTime={quickSetAlarmTime}
+                    setQuickSetAlarmTime={setQuickSetAlarmTime}
+                />
+
                 <Button
                     color="blue"
-                    title="Clear All Alarm "
-                    type="solid"
+                    title="Clear All "
+                    type="outline"
                     fontSize="20"
                     onPress={() => {
                         clearAllAlarm()
@@ -193,7 +218,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 15,
     },
     button: {
-        width: 300,
+        width: Dimensions.get('window').width,
         flex: 0.2,
         flexDirection: "row",
         backgroundColor: '#FFFFFF',
