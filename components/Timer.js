@@ -1,12 +1,8 @@
 import React, { Component, useState } from 'react'
 import { Animated, StyleSheet, View, Text, TouchableOpacity, FlatList, Dimensions } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
-
-const DATA = {
-  hours: 12,
-  minutes: 34,
-  seconds: 56,
-}
+import ToggleSwitch from 'toggle-switch-react-native'
+import Pomodoro from "./Pomodoro"
 
 const numOfHours = [...Array(24).keys()]
 const minSec = [...Array(60).keys()]
@@ -62,6 +58,17 @@ function RoundButton({ title, color, background, onPress }) {
   )
 }
 
+function PomodoroMode({ title, color, background, onPress }) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.pomodoro, { backgroundColor: background }]}
+    >
+      <Text style={[styles.buttonTitle, { color }]}>{title}</Text>
+    </TouchableOpacity>
+  )
+}
+
 function ButtonsRow({ children }) {
   return (
     <View style={styles.buttonsRow}>{children}</View>
@@ -77,6 +84,7 @@ export default class App extends Component {
       seconds: 0,
       start: false,
       isPlaying: false,
+      pomodoro: false,
     }
   }
   //
@@ -85,10 +93,12 @@ export default class App extends Component {
   //  }
 
   start = () => {
-    this.setState({
-      start: true,
-      isPlaying: true,
-    })
+    if (this.state.hours != 0 || this.state.minutes != 0 || this.state.seconds != 0) {
+      this.setState({
+        start: true,
+        isPlaying: true,
+      })
+    }
   }
 
   pause = () => {
@@ -113,11 +123,32 @@ export default class App extends Component {
     })
   }
 
+//  pomodoro = () => {
+//    this.setState({
+//      pomodoro: true,
+//    })
+//  }
+
   render() {
-    const { start, isPlaying, hours, minutes, seconds } = this.state
+    const { start, isPlaying, hours, minutes, seconds, pomodoro } = this.state
     return (
       <View style={styles.container}>
-        { !start && !isPlaying && (
+        { !start && (
+            <ToggleSwitch
+              isOn={pomodoro}
+              onColor="tomato"
+              offColor="grey"
+              label="Pomodoro"
+              labelStyle={{ color: "black", fontWeight: "900" }}
+              size="large"
+              onToggle={isOn => this.setState({
+                pomodoro: !pomodoro,
+              })}
+              disabled={false}
+            />
+        )}
+
+        { !start && !isPlaying && !pomodoro && (
           <View style={{ alignItems: 'center' }}>
             <UnitRow>
               <Unit title='Hours'>
@@ -216,9 +247,8 @@ export default class App extends Component {
           </View>
         )}
 
-
         { start && (
-          <View style = {styles.countdowntimer}>
+          <View style = {styles.countdownTimer}>
             <CountdownCircleTimer
               isPlaying={isPlaying}
               duration={hours * 3600 + minutes * 60 + seconds}
@@ -245,7 +275,7 @@ export default class App extends Component {
           </View>
         )}
 
-          {start && isPlaying && (
+          { start && isPlaying && (
             <ButtonsRow>
               <RoundButton
                 title='Pause'
@@ -260,7 +290,7 @@ export default class App extends Component {
             </ButtonsRow>
           )}
 
-          {start && !isPlaying && (
+          { start && !isPlaying && (
             <ButtonsRow>
               <RoundButton
                 title='Resume'
@@ -273,6 +303,10 @@ export default class App extends Component {
                 background='#3D3D3D'
                 onPress={this.reset} />
             </ButtonsRow>
+          )}
+
+          { pomodoro && (
+            <Pomodoro/>
           )}
         </View>
     )
@@ -331,7 +365,15 @@ const styles = StyleSheet.create({
     fontSize: 50,
     textAlign: 'center',
   },
-  countdowntimer : {
+  countdownTimer : {
     marginTop : -(Dimensions.get('window').height * 0.1)
-  }
+  },
+  pomodoro: {
+    width: 180,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+  },
 })
