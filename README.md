@@ -29,6 +29,6 @@ Download the app "Expo Go".
 
 Run ```expo start``` on your command line on your computer. It should open up a page in your browser and there should be a QR code on the bottom left of the page.
 
-Scan the QR code with the Expo Go app on your Android device.
+Scan the QR code with the Expo Go app on your Android device. Select "LAN" for connection and make sure that your computer and phone are connected to the same wifi connection.
 
 Timefy should be available for use.

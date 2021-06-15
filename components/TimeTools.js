@@ -38,12 +38,17 @@ function convertTime(time) {
     return time < 10 ? '0' + time : time;
 }
 
-// not working idk why 
 export function timeEqual(currTime, alarmTime, currDate, alarmDate){
     return (currTime == alarmTime) && (currDate == alarmDate);
 }
 
-export function timeEqual2(currTime, alarmTime){
-    return (currTime == alarmTime);
+export function isDay(currDate) {
+    return currDate.getHours() > 7 && currDate.getHours() < 19;
+    //return currDate.getSeconds() % 2 === 0;
+
 }
 
+// -1 if time1 <time2, 0 if time1 = time 2), 1 if (time1 > time2)
+export function compareTime(time1, time2) {
+    return time1.localeCompare(time2);
+}

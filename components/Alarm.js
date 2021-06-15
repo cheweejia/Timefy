@@ -1,7 +1,10 @@
 import React, { useEffect, useState, } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import TimeTools, { getTime, getDate, timeEqual, timeEqual2 } from "./TimeTools";
-import AlarmManager from './AlarmManger/AlarmManager';
+import AlarmManager from './AlarmManager/AlarmManager';
+import Clock from "./Clock";
+import TimeWheel from './AlarmManager/TimeWheel';
+//import { Picker, DatePicker } from 'react-native-wheel-pick';
 
 function Alarm() {
 
@@ -44,42 +47,69 @@ function Alarm() {
         setState({ hours, minutes, seconds });
     };
 
+    const [timeWheelVisible, setTimeWheelVisible] = useState(false);
+    const [quickSetAlarmTime, setQuickSetAlarmTime] = useState("00:00:00");
+
+
+    const toggleTimeWheel = () => {
+        setTimeWheelVisible(!timeWheelVisible);
+    }
+
 
     return (
         <>
-            <View style={styles.clock}>
+            {/* <View style={styles.clock}>
+                <Clock />
+            </View> */}
+            <View style={styles.timedate}>
+                <Clock />
 
-                <Text style={styles.timeFont}>
-                    {checkAlarm()}
-                    {currTime}
-                </Text>
+                <TouchableOpacity onPress={() => toggleTimeWheel()}>
+                    <Text style={styles.timeFont}>
+                        {checkAlarm()}
+                        {!timeWheelVisible
+                            ? currTime
+                            : <TimeWheel
+                                quickSetAlarmTime={quickSetAlarmTime}
+                                setQuickSetAlarmTime={setQuickSetAlarmTime} />}
+                    </Text>
+                </TouchableOpacity>
                 <Text style={styles.dateFont}>
                     {currDate}
                 </Text>
+
             </View>
 
             <View style={styles.manager}>
                 <AlarmManager
                     listOfAlarm={listOfAlarm}
                     setListOfAlarm={setListOfAlarm}
+                    timeWheelVisible={timeWheelVisible}
+                    quickSetAlarmTime={quickSetAlarmTime}
+                    setQuickSetAlarmTime={setQuickSetAlarmTime}
                 />
 
             </View>
-
-
         </>
     );
 }
 
 
 const styles = StyleSheet.create({
-    clock: {
-        paddingTop: 80,
+    timedate: {
+        paddingTop: 130,
         flex: 1.3,
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: -40
+        marginBottom: -20
+    },
+    clock: {
+        paddingTop: 80,
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     manager: {
         flex: 2,
@@ -91,7 +121,7 @@ const styles = StyleSheet.create({
     timeFont: {
         fontSize: 60,
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
     },
     dateFont: {
         fontSize: 20,
