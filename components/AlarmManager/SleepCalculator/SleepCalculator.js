@@ -5,7 +5,7 @@ import SleepTime from './SleepTime';
 import WakeUpTime from './WakeUpTime';
 
 function SleepCalculator(props) {
-    const { timeWheelVisible, quickSetAlarmTime, setQuickSetAlarmTime } = props;
+    const { timeWheelVisible, quickSetAlarmTime, setQuickSetAlarmTime, sleepCalculatorPressed, setSleepCalculatorPressed} = props;
 
     const [wakeUpTimeVisible, setWakeUpTimeVisible] = useState(false);
     const [sleepTimeVisible, setSleepTimeVisible] = useState(false);
@@ -38,10 +38,18 @@ function SleepCalculator(props) {
             <WakeUpTime
                 wakeUpTimeVisible={wakeUpTimeVisible}
                 setWakeUpTimeVisible={setWakeUpTimeVisible}
+                quickSetAlarmTime={quickSetAlarmTime}
+                setQuickSetAlarmTime={setQuickSetAlarmTime}
+                sleepCalculatorPressed = {sleepCalculatorPressed}
+                setSleepCalculatorPressed = {setSleepCalculatorPressed}
             />
             <SleepTime
                 sleepTimeVisible={sleepTimeVisible}
                 setSleepTimeVisible={setSleepTimeVisible}
+                quickSetAlarmTime={quickSetAlarmTime}
+                setQuickSetAlarmTime={setQuickSetAlarmTime}
+                sleepCalculatorPressed = {sleepCalculatorPressed}
+                setSleepCalculatorPressed = {setSleepCalculatorPressed}
             />
 
         </View>

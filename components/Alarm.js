@@ -55,6 +55,21 @@ function Alarm() {
         setTimeWheelVisible(!timeWheelVisible);
     }
 
+    const resetQuickSetAlarm = () => {
+        setQuickSetAlarmTime("00:00:00");
+    }
+
+    // const InitTimeWheel = () => {
+    //     //resetQuickSetAlarm();
+
+    //     return (
+    //         <TimeWheel
+    //             quickSetAlarmTime={quickSetAlarmTime}
+    //             setQuickSetAlarmTime={setQuickSetAlarmTime}
+    //         />
+    //     );
+    // }
+
     return (
         <>
             {/* <View style={styles.clock}>
@@ -70,8 +85,8 @@ function Alarm() {
                             ? currTime
                             : <TimeWheel
                                 quickSetAlarmTime={quickSetAlarmTime}
-                                setQuickSetAlarmTime={setQuickSetAlarmTime} 
-                                />
+                                setQuickSetAlarmTime={setQuickSetAlarmTime}
+                            />
                         }
                     </Text>
                 </TouchableOpacity>

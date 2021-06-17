@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import { Animated, StyleSheet, View, Text, TouchableOpacity, FlatList, Dimensions } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 
@@ -14,6 +14,10 @@ const minSec = [...Array(60).keys()]
 export default function TimeWheel(props) {
 
     const { quickSetAlarmTime, setQuickSetAlarmTime } = props;
+
+    useEffect ( () => {
+        setQuickSetAlarmTime("00:00:00")
+    }, [])
     
     return (
         <View style={styles.container}>

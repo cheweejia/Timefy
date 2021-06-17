@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// issue with handlenewalarm line 50 (sleep calculator)>> cannot update component 
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
 import { getTime, getDate, compareTime } from "../TimeTools";
@@ -47,7 +48,10 @@ function AlarmManager(props) {
             }
         ];
         setListOfAlarm(newAlarmList);
-        { !timeWheelVisible && resetQuickSetAlarm(); }
+        //{ sleepCalculatorPressed && resetSleepCalculatorPress(); }
+        // { !timeWheelVisible && resetQuickSetAlarm(); }
+
+        return true;
     }
 
     const showAllAlarm = (listOfAlarm) => {
@@ -64,10 +68,10 @@ function AlarmManager(props) {
                         </Text>
                     </TouchableOpacity>
                     <Switch
-                        key = {index}
-                        color = 'pink' 
+                        key={index}
+                        color='pink'
                         value={alarm.isOn}
-                        onValueChange = {
+                        onValueChange={
                             () => toggleAlarm(alarm, index)
                         }
                     />
@@ -115,13 +119,27 @@ function AlarmManager(props) {
     }
 
     //////////////////////////////////////////////////////////////
-    //TimeWheel Setting 
+    // SleepCalculator props
 
-    const resetQuickSetAlarm = () => {
-        setQuickSetAlarmTime('00:00:00');
+    const [sleepCalculatorPressed, setSleepCalculatorPressed] = useState();
+
+    const resetSleepCalculatorPress = () => {
+        setSleepCalculatorPressed(false);
         return true;
     }
-    //////////////////////////////////////////////////////////////
+
+    useEffect(() => {
+        sleepCalculatorPressed
+            && ((handleNewAlarm(quickSetAlarmTime,
+                (compareTime(getTime(new Date()), quickSetAlarmTime) > 0)
+                    ? getDate(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+                    : getDate(new Date()))) &&
+                resetSleepCalculatorPress())
+    }, [sleepCalculatorPressed]);
+
+
+    ///////////////////////////////////////////////////////////////
+
     return (
         <>
             <DateTimePickerModal
@@ -148,10 +166,13 @@ function AlarmManager(props) {
                             : showDatePicker()
                     }}
                 />
+
                 <SleepCalculator
                     timeWheelVisible={timeWheelVisible}
                     quickSetAlarmTime={quickSetAlarmTime}
                     setQuickSetAlarmTime={setQuickSetAlarmTime}
+                    sleepCalculatorPressed={sleepCalculatorPressed}
+                    setSleepCalculatorPressed={setSleepCalculatorPressed}
                 />
 
                 <Button

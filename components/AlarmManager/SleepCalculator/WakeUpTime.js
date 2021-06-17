@@ -1,36 +1,57 @@
 import React from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
-import { Provider, Portal,  } from 'react-native-paper';
+import { Button } from 'react-native-paper'
 import Modal from 'react-native-modal'
 
 function WakeUpTime(props) {
-    const { wakeUpTimeVisible, setWakeUpTimeVisible } = props;
+    const { wakeUpTimeVisible, setWakeUpTimeVisible, quickSetAlarmTime, setQuickSetAlarmTime, sleepCalculatorPressed, setSleepCalculatorPressed } = props;
     const containerStyle = { backgroundColor: 'white', padding: 20, height: Dimensions.get('window').height, width: Dimensions.get('window').width };
 
     const hideModal = () => {
         setWakeUpTimeVisible(false);
     }
+
+    const handleNewSleepCalculatorAlarm = () => {
+        setQuickSetAlarmTime("12:34:45");
+        handlePressedButton();
+        console.log('handledt');
+        // setSleepCalculatorPressed(false);
+        // console.log('handledf');
+    }
+
+    const handlePressedButton = () => {
+        setSleepCalculatorPressed(true);
+    }
+
+    const resetPressedButton = () => {
+        setSleepCalculatorPressed(false);
+    }
+
     return (
         <View>
             {
-                wakeUpTimeVisible &&
+                wakeUpTimeVisible && 
                 <Modal
                     isVisible={wakeUpTimeVisible}
                     onRequestClose={() => hideModal()}
                     animationIn='rubberBand'
                     animationOut='fadeOut'
-                    swipeDirection = 'down'
-                    style = {{margin : 30}}
-                    onSwipeComplete= {() => hideModal()}
+                    swipeDirection='down'
+                    style={{ margin: 30 }}
+                    onSwipeComplete={() => hideModal()}
                     hideModalContentWhileAnimating={true}
-                    //coverScreen = {false}
+                //coverScreen = {false}
 
                 >
-                    <View style = {styles.modalcontainer}>
+                    <View style={styles.modalcontainer}>
+                        <Button
+                            mode='contained'
+                            title='hehe'
+                            fontSize='30'
+                            onPress= { () => handleNewSleepCalculatorAlarm() }
+                        />
                         <Text style={styles.alarmtext3}>
-                            test
-
-
+                            heheh
                         </Text>
                     </View>
                 </Modal>
@@ -46,13 +67,13 @@ const styles = StyleSheet.create({
         fontSize: 80,
         color: 'black',
         padding: 10,
-        alignItems : 'center',
-        borderRadius : 5
-    }, 
+        alignItems: 'center',
+        borderRadius: 5
+    },
     modalcontainer: {
-        alignItems:'center',
-        backgroundColor:'white', 
-        borderRadius : 5
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderRadius: 5
     }
 });
 

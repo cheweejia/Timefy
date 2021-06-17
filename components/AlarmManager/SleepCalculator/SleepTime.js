@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { Modal, Provider, Portal } from 'react-native-paper';
 
 function SleepTime(props) {
-    const { sleepTimeVisible, setSleepTimeVisible } = props;
+    const { sleepTimeVisible, setSleepTimeVisible, quickSetAlarmTime, setQuickSetAlarmTime, sleepCalculatorPressed, setSleepCalculatorPressed } = props;
     const containerStyle = {backgroundColor: 'white', padding: 20};
 
     const hideModal = () => {
@@ -26,14 +26,5 @@ function SleepTime(props) {
     );
 
 }
-
-const styles = StyleSheet.create({
-    alarmtext3: {
-        fontSize: 20,
-        color: 'white',
-        padding: 10,
-        alignItems : 'center'
-    }
-});
 
 export default SleepTime;
