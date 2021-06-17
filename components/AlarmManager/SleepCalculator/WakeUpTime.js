@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper'
-import Modal from 'react-native-modal'
+import { Button } from 'react-native-paper';
+import Modal from 'react-native-modal';
+import { getTime, } from '../../TimeTools';
 
 function WakeUpTime(props) {
     const { wakeUpTimeVisible, setWakeUpTimeVisible, quickSetAlarmTime, setQuickSetAlarmTime, sleepCalculatorPressed, setSleepCalculatorPressed } = props;
@@ -11,26 +12,24 @@ function WakeUpTime(props) {
         setWakeUpTimeVisible(false);
     }
 
-    const handleNewSleepCalculatorAlarm = () => {
-        setQuickSetAlarmTime("12:34:45");
+    const handleNewSleepCalculatorAlarm = (time) => {
+        setQuickSetAlarmTime(time);
         handlePressedButton();
-        console.log('handledt');
-        // setSleepCalculatorPressed(false);
-        // console.log('handledf');
+        // console.log('handledt');
     }
 
     const handlePressedButton = () => {
         setSleepCalculatorPressed(true);
     }
 
-    const resetPressedButton = () => {
-        setSleepCalculatorPressed(false);
+    const findWakeUpTime = (numOfHours) => {
+        return getTime(new Date(new Date().getTime() + numOfHours * 60 * 60 * 1000));
     }
 
     return (
         <View>
             {
-                wakeUpTimeVisible && 
+                wakeUpTimeVisible &&
                 <Modal
                     isVisible={wakeUpTimeVisible}
                     onRequestClose={() => hideModal()}
@@ -45,14 +44,27 @@ function WakeUpTime(props) {
                 >
                     <View style={styles.modalcontainer}>
                         <Button
+                            styles={styles.buttons}
                             mode='contained'
-                            title='hehe'
-                            fontSize='30'
-                            onPress= { () => handleNewSleepCalculatorAlarm() }
-                        />
-                        <Text style={styles.alarmtext3}>
-                            heheh
-                        </Text>
+                            onPress={() => handleNewSleepCalculatorAlarm(findWakeUpTime(7.5))}
+                        >
+                            {findWakeUpTime(7.5)}
+                        </Button>
+
+                        <Button
+                            mode='contained'
+                            onPress={() => handleNewSleepCalculatorAlarm(findWakeUpTime(9))}
+                        >
+                            {findWakeUpTime(9)}
+                        </Button>
+
+                        <Button
+                            mode='contained'
+                            onPress={() => handleNewSleepCalculatorAlarm(findWakeUpTime(5.5))}
+                        >
+                            {findWakeUpTime(5.5)}
+                        </Button>
+
                     </View>
                 </Modal>
 
@@ -73,7 +85,11 @@ const styles = StyleSheet.create({
     modalcontainer: {
         alignItems: 'center',
         backgroundColor: 'white',
-        borderRadius: 5
+        borderRadius: 10, 
+        padding: 20
+    }, 
+    buttons: {
+       padding: 100, 
     }
 });
 
