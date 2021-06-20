@@ -15,6 +15,7 @@ function WakeUpTime(props) {
     const handleNewSleepCalculatorAlarm = (time) => {
         setQuickSetAlarmTime(time);
         handlePressedButton();
+        hideModal();
         // console.log('handledt');
     }
 
@@ -43,27 +44,42 @@ function WakeUpTime(props) {
 
                 >
                     <View style={styles.modalcontainer}>
-                        <Button
-                            styles={styles.buttons}
-                            mode='contained'
-                            onPress={() => handleNewSleepCalculatorAlarm(findWakeUpTime(7.5))}
-                        >
-                            {findWakeUpTime(7.5)}
-                        </Button>
 
-                        <Button
-                            mode='contained'
-                            onPress={() => handleNewSleepCalculatorAlarm(findWakeUpTime(9))}
-                        >
-                            {findWakeUpTime(9)}
-                        </Button>
+                        <Text style={styles.descriptionfont2}>
+                            If you sleep now, {"\n"}you should wake up at ...
 
-                        <Button
-                            mode='contained'
-                            onPress={() => handleNewSleepCalculatorAlarm(findWakeUpTime(5.5))}
-                        >
-                            {findWakeUpTime(5.5)}
-                        </Button>
+                        </Text>
+                        {/* <Text style={styles.descriptionfont2}>
+                            If you sleep now, you should wake up at ...
+                        </Text> */}
+
+                        <View style={styles.buttons}>
+                            <Button
+                                mode='contained'
+                                onPress={() => handleNewSleepCalculatorAlarm(findWakeUpTime(7.75))}
+                            >
+                                {findWakeUpTime(7.75)}
+                            </Button>
+                            <Text style={styles.cyclefont}>
+                                7 hour 45 min
+                            </Text>
+                        </View>
+
+                        <View style={styles.buttons}>
+                            <Button
+                                mode='contained'
+                                onPress={() => handleNewSleepCalculatorAlarm(findWakeUpTime(9.25))}
+                            >
+                                {findWakeUpTime(9.25)}
+                            </Button>
+                            <Text style={styles.cyclefont}>
+                                9 hour 15 min
+                            </Text>
+                        </View>
+
+                        <Text style={styles.descriptionfont1}>
+                            A good sleep consists of five or six 90-min sleep cycles.
+                        </Text>
 
                     </View>
                 </Modal>
@@ -85,11 +101,30 @@ const styles = StyleSheet.create({
     modalcontainer: {
         alignItems: 'center',
         backgroundColor: 'white',
-        borderRadius: 10, 
-        padding: 20
-    }, 
+        borderRadius: 10,
+        padding: 20,
+    },
     buttons: {
-       padding: 100, 
+        padding: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+
+    },
+    cyclefont: {
+        fontSize: 18,
+        marginLeft: 10
+
+    },
+    descriptionfont1: {
+        textAlign: 'center',
+        fontSize: 20,
+        paddingTop: 20,
+        fontWeight: 'bold'
+    },
+    descriptionfont2: {
+        textAlign: 'center',
+        fontSize: 18,
+        paddingBottom: 20,
     }
 });
 
