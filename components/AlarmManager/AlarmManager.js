@@ -14,7 +14,7 @@ import { Switch } from 'react-native-paper';
 
 function AlarmManager(props) {
 
-    const { listOfAlarm, setListOfAlarm, timeWheelVisible,
+    const { listOfAlarm, setListOfAlarm, timeWheelVisible, setTimeWheelVisible,
         quickSetAlarmTime, setQuickSetAlarmTime } = props;
 
     ////////////////////////////////////////////////////////////////////
@@ -40,12 +40,12 @@ function AlarmManager(props) {
 
     const handleNewAlarm = (newAlarmTime, newAlarmDate) => {
         const newAlarmList = [
-            ...listOfAlarm,
             {
                 time: newAlarmTime,
                 date: newAlarmDate,
                 isOn: true
             }
+            , ...listOfAlarm
         ];
         setListOfAlarm(newAlarmList);
         //{ sleepCalculatorPressed && resetSleepCalculatorPress(); }
@@ -175,15 +175,29 @@ function AlarmManager(props) {
                     setSleepCalculatorPressed={setSleepCalculatorPressed}
                 />
 
-                <Button
-                    color="blue"
-                    title="Clear All "
-                    type="outline"
-                    fontSize="20"
-                    onPress={() => {
-                        clearAllAlarm()
-                    }}
-                />
+                {
+                    !timeWheelVisible
+                        ? <Button
+                            color="blue"
+                            title="Clear All "
+                            type="outline"
+                            fontSize="20"
+                            onPress={() => {
+                                clearAllAlarm();
+                            }}
+                        />
+                        : <Button
+                            color="blue"
+                            title="Go Back"
+                            type="outline"
+                            fontSize="20"
+                            onPress={() => {
+                                setTimeWheelVisible(false);
+                            }}
+                        />
+                }
+
+
 
             </View>
 
