@@ -109,7 +109,7 @@ export default function Pomodoro() {
                 <View>
                     <StartButton
                         title='Start'
-                        color='maroon'
+                        color='white'
                         background='tomato'
                         onPress={proceed} />
                 </View>
@@ -122,8 +122,8 @@ export default function Pomodoro() {
                 }}>
                     <RoundButton
                         title='Pause'
-                        color='#E33935'
-                        background='#3C1715'
+                        color='white' /*'#E33935'*/
+                        background='#3D3D3D' /*'#3C1715'*/
                         onPress={pause} />
                 </View>
             )}
@@ -132,8 +132,8 @@ export default function Pomodoro() {
                 <ButtonsRow>
                     <RoundButton
                         title='Resume'
-                        color='#50D167'
-                        background='#1B361F'
+                        color='white'
+                        background='tomato'
                         onPress={resume} />
                     <RoundButton
                         title='Stop'
