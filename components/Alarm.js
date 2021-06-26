@@ -6,7 +6,59 @@ import AlarmManager from './AlarmManager/AlarmManager';
 import Clock from "./Clock";
 import TimeWheel from './AlarmManager/TimeWheel';
 import { Audio } from 'expo-av';
+import MathGame from './MathGame';
+import Modal from 'react-native-modal';
+import { Button } from 'react-native-elements';
+
+
 //import { Picker, DatePicker } from 'react-native-wheel-pick';
+
+function AlarmScreen() {
+    return (
+                    
+        {/* <Modal
+                        isVisible={alarmScreenVisible}
+                        onRequestClose={() => closeMathGame()}
+                        animationIn='rubberBand'
+                        animationOut='fadeOut'
+                        swipeDirection='right'
+                        style={{ margin: 30 }}
+                        onSwipeComplete={() => closeMathGame()}
+                        hideModalContentWhileAnimating={true}
+                    //coverScreen = {false}
+                    >
+                        <View style={styles.container}>
+                            <Text>
+                                "ALARM " + {currRingAlarmIndex} + "SCHEDULED ON " +  "RING RING RING"
+                            </Text>
+
+                            <View style={styles.button}>
+                                <Button
+                                    color="blue"
+                                    title="Dismiss"
+                                    type="outline"
+                                    fontSize="15"
+                                    onPress={() => {
+                                        dismissAlarm(index);
+                                    }}
+                                />
+
+                                <Button
+                                    color="blue"
+                                    title="Snooze"
+                                    type="outline"
+                                    fontSize="15"
+                                    onPress={() => {
+                                        snoozeAlarm(index);
+                                    }}
+                                />
+                            </View>
+
+                        </View>
+                    </Modal> */}
+    );
+}
+
 
 function Alarm() {
 
@@ -37,31 +89,47 @@ function Alarm() {
         }
     }
 
+    /////////////////////////////////////////////
+    const [currRingAlarmIndex, setCurrRingAlarmIndex] = useState();
+
+
+
     const ringAlarm = (timeDate, index) => {
 
-
+        //setCurrRingAlarmIndex(index);
+        //setAlarmScreenVisible(alarmScreenVisible);
         console.log('ring');
         Alert.alert('testtest',
-            "ALARM " + index + "SCHEDULED ON " + timeDate + "RING RING RING",
+            "ALARM " + index + "SCHEDULED ON " + timeDate + "RING RING RING"
+            ,
             [
                 { text: 'DISMISS', onPress: () => { handleDismissedAlarm(index) } },
                 { text: 'SNOOZE', onPress: () => { handleSnoozedAlarm(index) } },
 
             ],
-            { cancelable: false });
+            { cancelable: false, }
+
+        );
         playAlarmSound();
+
 
     }
     //////////////////////////////////////////////////
+
+    const [alarmScreenVisible, setAlarmScreenVisible] = useState(false)
 
     const handleDisabledAlarm = (index) => {
         setListOfAlarm(dismissAlarm(index, listOfAlarm));
     }
 
     const handleDismissedAlarm = (index) => {
-        stopAlarmSound();
-        dismissAlarmSound();
-        setListOfAlarm(dismissAlarm(index, listOfAlarm));
+        if (mathGameSolved) {
+            stopAlarmSound();
+            dismissAlarmSound();
+            setListOfAlarm(dismissAlarm(index, listOfAlarm));
+        } else {
+            setMathGameVisible(true);
+        }
     }
 
     const handleSnoozedAlarm = (index) => {
@@ -73,8 +141,14 @@ function Alarm() {
         console.log(listOfAlarm);
     }
 
+    ///////////////////////////////////////
 
+    const [mathGameVisible, setMathGameVisible] = useState(false);
+    const [mathGameSolved, setMathGameSolved] = useState(false);
 
+    useEffect(() => {
+        { mathGameSolved && handleDismissedAlarm }
+    }, [mathGameSolved])
 
 
 
@@ -181,6 +255,7 @@ function Alarm() {
 
     return (
         <>
+
             <View style={styles.timedate}>
                 <Clock />
 
@@ -223,6 +298,59 @@ function Alarm() {
                 />
 
             </View>
+
+            {mathGameVisible &&
+                <MathGame
+                    mathGameVisible={mathGameVisible}
+                    setMathGameVisible={setMathGameVisible}
+                    mathGameSolved={mathGameSolved}
+                    setMathGameSolved={setMathGameSolved}
+                />
+            }
+
+
+                    {/* <Modal
+                        isVisible={alarmScreenVisible}
+                        onRequestClose={() => closeMathGame()}
+                        animationIn='rubberBand'
+                        animationOut='fadeOut'
+                        swipeDirection='right'
+                        style={{ margin: 30 }}
+                        onSwipeComplete={() => closeMathGame()}
+                        hideModalContentWhileAnimating={true}
+                    //coverScreen = {false}
+                    >
+                        <View style={styles.container}>
+                            <Text>
+                                "ALARM " + {currRingAlarmIndex} + "SCHEDULED ON " +  "RING RING RING"
+                            </Text>
+
+                            <View style={styles.button}>
+                                <Button
+                                    color="blue"
+                                    title="Dismiss"
+                                    type="outline"
+                                    fontSize="15"
+                                    onPress={() => {
+                                        dismissAlarm(index);
+                                    }}
+                                />
+
+                                <Button
+                                    color="blue"
+                                    title="Snooze"
+                                    type="outline"
+                                    fontSize="15"
+                                    onPress={() => {
+                                        snoozeAlarm(index);
+                                    }}
+                                />
+                            </View>
+
+                        </View>
+                    </Modal> */}
+
+
         </>
     );
 }

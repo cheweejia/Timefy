@@ -57,10 +57,9 @@ export function toggleAlarm(alarm, index, currListOfAlarm) {
 export function snoozeAlarm(index, currListOfAlarm) {
     const newSnoozeTime = convertSecToTime(convertTimeToSec(getTime(new Date())) + currListOfAlarm[index].snoozeDuration);
     const alarm = currListOfAlarm[index];
-    const newAlarmList = []
 
     if (alarm.snoozeDuration > 0) {
-        newAlarmList = [
+        const newAlarmList = [
             ...currListOfAlarm.slice(0, index),
             {
                 time: newSnoozeTime > "23:59:59" ? resetOverflowTime(newSnoozeTime) : newSnoozeTime,
@@ -140,3 +139,24 @@ export function changeSnoozeDuration(index, currListOfAlarm, newSnoozeDuration) 
 
     return newAlarmList;
 }
+
+export function changeRepeatDay(index, currListOfAlarm, newRepeatDay){
+    const alarm = currListOfAlarm[index]
+    const newAlarmList = [
+        ...currListOfAlarm.slice(0, index),
+        {
+            time: alarm.time,
+            date: alarm.date,
+            isOn: alarm.isOn,
+            isSnooze: alarm.isSnooze,
+            snoozeDuration: alarm.snoozeDuration,
+            repeat: newRepeatDay,
+            oriTime: alarm.time,
+            oriDate: alarm.date
+        },
+        ...currListOfAlarm.slice(index + 1)
+    ]
+
+    return newAlarmList;
+
+};

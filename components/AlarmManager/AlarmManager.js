@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
-import { getTime, getDate, compareTime } from "../TimeTools";
+import { getTime, getDate, compareTime, isDay2 } from "../TimeTools";
 import { addAlarm, deleteAlarm, toggleAlarm, resetAllAlarm } from "../AlarmManagementTools";
 import TimeWheel from './TimeWheel';
 import AlarmSetting from '../AlarmSetting/AlarmSetting';
@@ -57,7 +57,17 @@ function AlarmManager(props) {
             listOfAlarm.map((alarm, index) => (
 
                 <View key={index} style={styles.checkbox} >
-                    <TouchableOpacity style={styles.alarmtext2}
+                    <TouchableOpacity style={styles.alarmtext2,
+
+                    {
+                        backgroundColor: isDay2(alarm.time) ? 'rgba(255, 215, 154, 1.0)' : 'rgba(132, 151, 243, 1.0)',
+                        borderWidth: 3,
+                        borderColor: 'white',
+                        borderTopLeftRadius: 15,
+                        borderTopRightRadius: 15,
+                        borderBottomRightRadius: 15,
+                        borderBottomLeftRadius: 15,
+                    }}
                         onPress={() => openAlarmSettings(index, alarm)
                         }>
                         <Text style={styles.alarmtext3}>
@@ -67,7 +77,7 @@ function AlarmManager(props) {
                     </TouchableOpacity>
                     <Switch
                         key={index}
-                        color='pink'
+                        color= {isDay2(alarm.time) ? 'rgba(255, 215, 154, 1.0)' : 'rgba(132, 151, 243, 1.0)'}
                         value={alarm.isOn}
                         onValueChange={
                             () => handleToggleAlarm(alarm, index)
@@ -188,14 +198,14 @@ function AlarmManager(props) {
             </ScrollView>
 
             <AlarmSetting
-                        alarmIndex={alarmIndex}
-                        alarmObj={alarmObj}
-                        setAlarmIndex={setAlarmIndex}
-                        alarmSettingVisible={alarmSettingVisible}
-                        setAlarmSettingVisible={setAlarmSettingVisible}
-                        listOfAlarm={listOfAlarm}
-                        setListOfAlarm={setListOfAlarm}
-                    />
+                alarmIndex={alarmIndex}
+                alarmObj={alarmObj}
+                setAlarmIndex={setAlarmIndex}
+                alarmSettingVisible={alarmSettingVisible}
+                setAlarmSettingVisible={setAlarmSettingVisible}
+                listOfAlarm={listOfAlarm}
+                setListOfAlarm={setListOfAlarm}
+            />
 
 
 
@@ -225,13 +235,8 @@ const styles = StyleSheet.create({
     alarmtext2: {
         padding: 10,
         fontSize: 30,
-        backgroundColor: 'lightpink',
-        borderWidth: 3,
-        borderColor: 'white',
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        borderBottomRightRadius: 15,
-        borderBottomLeftRadius: 15,
+        //backgroundColor: 'lightpink',
+
     },
     button: {
         width: Dimensions.get('window').width,

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Button } from 'react-native-elements';
 
 import Modal from 'react-native-modal';
-import {changeSnoozeDuration} from '../AlarmManagementTools'
+import { changeSnoozeDuration, changeRepeatDay } from '../AlarmManagementTools'
 
 
 function AlarmSetting(props) {
@@ -14,44 +14,57 @@ function AlarmSetting(props) {
         setAlarmSettingVisible(!alarmSettingVisible);
     };
 
-/////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////
 
-const saveAllChanges = () => {
-    console.log(snoozeDuration);
-    setListOfAlarm(changeSnoozeDuration(alarmIndex, listOfAlarm, snoozeDuration));
-    setAlarmSettingVisible(!alarmSettingVisible);
-    setRepeatDay(tempRepeatDay);
+    const saveAllChanges = () => {
+        console.log(snoozeDuration);
+        setListOfAlarm(changeSnoozeDuration(alarmIndex, listOfAlarm, snoozeDuration));
 
-}
+        const newRepeat = [sun, mon, tues, wed, thur, fri, sat];
+        setListOfAlarm(changeRepeatDay(alarmIndex, listOfAlarm, newRepeat));
 
-const discardAllChanges = () => {
-    setAlarmSettingVisible(!alarmSettingVisible);
-}
+        setAlarmSettingVisible(!alarmSettingVisible);
+
+    }
+
+    const discardAllChanges = () => {
+        setAlarmSettingVisible(!alarmSettingVisible);
+    }
 
 
-//////////////////////////////////////// Snooze
-useEffect(() => {    
-    initSetting(alarmIndex, listOfAlarm)
-}, [])
+    //////////////////////////////////////// Snooze
+    // useEffect(() => {    
+    //     initSetting(alarmIndex, listOfAlarm)
+    // }, [])
 
-const initSetting = (alarmIndex, listOfAlarm) => {
-    const defaultSnoozeDuration = listOfAlarm[alarmIndex] === undefined ? 60 : listOfAlarm[alarmIndex].snoozeDuration
-    setSnoozeDuration(defaultSnoozeDuration)
-}
-    
+    // const initSetting = (alarmIndex, listOfAlarm) => {
+    //     const defaultSnoozeDuration = listOfAlarm[alarmIndex] === undefined ? 60 : listOfAlarm[alarmIndex].snoozeDuration
+    //     setSnoozeDuration(defaultSnoozeDuration)
+    // }
+
     //const defaultSnoozeDuration = (listOfAlarm === []) ? 60 : listOfAlarm[alarmIndex].snoozeDuration;
     //console.log(listOfAlarm)
-    console.log(listOfAlarm)
-    console.log(alarmIndex)
+    // console.log(listOfAlarm)
+    // console.log(alarmIndex)
     const [snoozeDuration, setSnoozeDuration] = useState(30);
     //const [tempSnoozeDuration, setTempSnoozeDuration] = useState(30);
 
 
-//////////////////////////////////////////////Repeat
+    //////////////////////////////////////////////Repeat
     const [needRepeat, setNeedRepeat] = useState(true);
     const [repeatDay, setRepeatDay] = useState([true, true, true, true, true, true, true]);
-    const [tempRepeatDay, setTempRepeatDay] = useState([true, true, true, true, true, true, true])
 
+    const [sun, setSun] = useState(true);
+    const [mon, setMon] = useState(true);
+    const [tues, setTues] = useState(true);
+    const [wed, setWed] = useState(true);
+    const [thur, setThur] = useState(true);
+    const [fri, setFri] = useState(true);
+    const [sat, setSat] = useState(true);
+
+    // const buttonColorStyle = {
+    //     backgroundColor: (isDay(new Date())) ? 'rgba(252, 150, 1, 0.6)' : 'rgba(18, 47, 80, 0.7)'
+    //   }
 
 
 
@@ -71,25 +84,25 @@ const initSetting = (alarmIndex, listOfAlarm) => {
             >
                 <ScrollView>
                     <View style={styles.modalcontainer}>
-                        <View style = {styles.button}>
-                        <Button
-                            color="blue"
-                            title="Discard"
-                            type="clear"
-                            fontSize="15"
-                            onPress={() => {
-                                discardAllChanges();
-                            }}
-                        />
-                        <Button
-                            color="blue"
-                            title="Save"
-                            type="clear"
-                            fontSize="15"
-                            onPress={() => {
-                                saveAllChanges();
-                            }}
-                        />
+                        <View style={styles.button}>
+                            <Button
+                                color="blue"
+                                title="Discard"
+                                type="clear"
+                                fontSize="15"
+                                onPress={() => {
+                                    discardAllChanges();
+                                }}
+                            />
+                            <Button
+                                color="blue"
+                                title="Save"
+                                type="clear"
+                                fontSize="15"
+                                onPress={() => {
+                                    saveAllChanges();
+                                }}
+                            />
                         </View>
 
 
@@ -99,7 +112,7 @@ const initSetting = (alarmIndex, listOfAlarm) => {
 
                         <View style={styles.settings}>
                             <Text style={styles.titletext}>
-                                Snooze: 
+                                Snooze:
                             </Text>
                             <Picker
                                 mode='dropdown'
@@ -108,9 +121,9 @@ const initSetting = (alarmIndex, listOfAlarm) => {
                                 promopt='snooze'
                                 selectedValue={snoozeDuration}
                                 onValueChange={(itemValue, itemIndex) => {
-                                    console.log(snoozeDuration);
+                                    //console.log(snoozeDuration);
                                     setSnoozeDuration(itemValue);
-                                    console.log(snoozeDuration);
+                                    //console.log(snoozeDuration);
                                 }
                                 }
                             >
@@ -123,6 +136,166 @@ const initSetting = (alarmIndex, listOfAlarm) => {
 
 
                             </Picker>
+
+                            <Text style={styles.titletext}>
+                                Repeat:
+                            </Text>
+
+                            <View style={styles.repeatbuttoncontainer}>
+
+                                <TouchableOpacity
+                                    key={0}
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.2)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 35,
+                                        height: 35,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 50,
+                                        flexDirection: 'column',
+                                        padding: 5,
+                                        backgroundColor: sun ? 'rgba(120, 240, 140,1.0)' : 'transparent'
+                                    }}
+                                    onPress={() => setSun(!sun)}
+
+                                >
+                                    <Text> S </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    key={1}
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.2)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 35,
+                                        height: 35,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 50,
+                                        flexDirection: 'column',
+                                        padding: 5,
+                                        backgroundColor: mon ? 'rgba(120, 240, 140,1.0)' : 'transparent'
+                                    }}
+                                    onPress={() => setMon(!mon)}
+
+                                >
+                                    <Text> M </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    key={2}
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.2)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 35,
+                                        height: 35,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 50,
+                                        flexDirection: 'column',
+                                        padding: 5,
+                                        backgroundColor: tues ? 'rgba(120, 240, 140,1.0)' : 'transparent'
+                                    }}
+                                    onPress={() => setTues(!tues)}
+
+                                >
+                                    <Text> T </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    key={3}
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.2)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 35,
+                                        height: 35,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 50,
+                                        flexDirection: 'column',
+                                        padding: 5,
+                                        backgroundColor: wed ? 'rgba(120, 240, 140,1.0)' : 'transparent'
+                                    }}                                    
+                                    onPress={() => setWed(!wed)}
+
+                                >
+                                    <Text> W </Text>
+                                </TouchableOpacity>
+
+
+                                <TouchableOpacity
+                                    key={4}
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.2)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 35,
+                                        height: 35,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 50,
+                                        flexDirection: 'column',
+                                        padding: 5,
+                                        backgroundColor: thur ? 'rgba(120, 240, 140,1.0)' : 'transparent'
+                                    }}                                    
+                                    onPress={() => setThur(!thur)}
+
+                                >
+                                    <Text> T </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    key={5}
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.2)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 35,
+                                        height: 35,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 50,
+                                        flexDirection: 'column',
+                                        padding: 5,
+                                        backgroundColor: fri ?'rgba(120, 240, 140,1.0)' : 'transparent'
+                                    }}                                    
+                                    onPress={() => setFri(!fri)}
+
+                                >
+                                    <Text> F </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    key={6}
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: 'rgba(0,0,0,0.2)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 35,
+                                        height: 35,
+                                        backgroundColor: '#fff',
+                                        borderRadius: 50,
+                                        flexDirection: 'column',
+                                        padding: 5,
+                                        backgroundColor: sat ? 'rgba(120, 240, 140,1.0)' : 'transparent'
+                                    }}                                    
+                                    onPress={() => setSat(!sat)}
+
+                                >
+                                    <Text> S </Text>
+                                </TouchableOpacity>
+
+                            </View>
+
+
+
+
+
                         </View>
 
 
@@ -163,15 +336,32 @@ const styles = StyleSheet.create({
         fontSize: 18,
         padding: 5,
         alignItems: 'flex-start'
-    }, 
+    },
     button: {
-        width: 0.7* Dimensions.get('window').width,
+        width: 0.7 * Dimensions.get('window').width,
         flex: 0.2,
         flexDirection: "row",
         backgroundColor: '#FFFFFF',
         justifyContent: 'flex-end',
         alignContent: 'center',
     },
+    repeatbutton: {
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.2)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 30,
+        height: 30,
+        backgroundColor: '#fff',
+        borderRadius: 50,
+        flexDirection: 'column',
+        padding: 5,
+
+    },
+    repeatbuttoncontainer: {
+        flexDirection: 'row',
+        alignContent: 'space-between'
+    }
 });
 
 export default AlarmSetting;

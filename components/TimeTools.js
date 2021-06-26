@@ -35,7 +35,10 @@ export function timeEqual(currTime, alarmTime, currDate, alarmDate){
 export function isDay(currDate) {
     return currDate.getHours() > 7 && currDate.getHours() < 19;
     //return currDate.getSeconds() % 2 === 0;
+}
 
+export function isDay2(time) {
+    return time < "19:00:00" && time > "07:00:00";
 }
 
 // -1 if time1 <time2, 0 if time1 = time 2), 1 if (time1 > time2)
@@ -57,4 +60,15 @@ export function convertTimeToSec(time) {
     const currSec = parseInt(time.slice(6,8));
     console.log(currHr * 3600 + currMin * 60 +  currSec);
     return currHr * 3600 + currMin * 60 +  currSec;
+}
+
+// change string like 24:59:59 to 0:59:59
+export function resetOverflowTime(time){
+    const currHr = parseInt(time.slice(0,2));
+    const currMin = parseInt(time.slice(3,5));
+    const currSec = parseInt(time.slice(6,8));
+
+    const newHr = currHr -24;
+
+    return newHr + ":" + currMin + ":" + currSec;
 }

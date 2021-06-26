@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions, Alert } from 'react-native'
-
+import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 function Button({ onPress, title }) {
@@ -15,9 +15,9 @@ function Button({ onPress, title }) {
 }
 
 function ButtonsRow({ children }) {
-  return (
-    <View style={styles.buttonsRow}>{children}</View>
-  )
+    return (
+        <View style={styles.buttonsRow}>{children}</View>
+    )
 }
 
 function NumberPad({ zero, one, two, three, four, five, six, seven, eight, nine, negative, check }) {
@@ -25,25 +25,25 @@ function NumberPad({ zero, one, two, three, four, five, six, seven, eight, nine,
         <View style={styles.numberPad}>
             <ButtonsRow>
                 <Button onPress={one} title='1' />
-                <Button onPress={two} title='2'/>
-                <Button onPress={three} title='3'/>
+                <Button onPress={two} title='2' />
+                <Button onPress={three} title='3' />
             </ButtonsRow>
 
             <ButtonsRow>
-                <Button onPress={four} title='4'/>
-                <Button onPress={five} title='5'/>
-                <Button onPress={six} title='6'/>
+                <Button onPress={four} title='4' />
+                <Button onPress={five} title='5' />
+                <Button onPress={six} title='6' />
             </ButtonsRow>
 
             <ButtonsRow>
-                <Button onPress={seven} title='7'/>
-                <Button onPress={eight} title='8'/>
-                <Button onPress={nine} title='9'/>
+                <Button onPress={seven} title='7' />
+                <Button onPress={eight} title='8' />
+                <Button onPress={nine} title='9' />
             </ButtonsRow>
 
             <ButtonsRow>
-                <Button onPress={negative} title='-'/>
-                <Button onPress={zero} title='0'/>
+                <Button onPress={negative} title='-' />
+                <Button onPress={zero} title='0' />
                 <TouchableOpacity
                     style={styles.button}
                     onPress={check}
@@ -55,7 +55,18 @@ function NumberPad({ zero, one, two, three, four, five, six, seven, eight, nine,
     )
 }
 
-export default function MathGame() {
+export default function MathGame(props) {
+    const {mathGameVisible, setMathGameVisible, mathGameSolved, setMathGameSolved} = props;
+
+    const closeMathGame = () => {
+        setMathGameVisible(false);
+    }
+
+    const solved = () => {
+        setMathGameVisible(false);
+        setMathGameSolved(true);
+    }
+
     const OPERATORS = ["+", "-"]
     const randomNumGen = (max) => Math.floor(Math.random() * max) + 1
 
@@ -99,6 +110,7 @@ export default function MathGame() {
             setInput(0)
             setNegative(false)
             setCorrect(true)
+            solved()
         } else {
             setInput(0)
             setNegative(false)
@@ -109,74 +121,92 @@ export default function MathGame() {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>{first} {firstOperator} {sec} {secOperator} {third}</Text>
-            <View style={styles.display}>
-                { correct == null ?
-                    <Text style={styles.text}>{display}</Text>
-                    : correct
-                        ? <Icon name="check" size={60} color="green" />
-                        : <Icon name="times" size={60} color="red" />
-                }
-            </View>
-            <NumberPad
-                zero={() => setValue(0)}
-                one={() => setValue(1)}
-                two={() => setValue(2)}
-                three={() => setValue(3)}
-                four={() => setValue(4)}
-                five={() => setValue(5)}
-                six={() => setValue(6)}
-                seven={() => setValue(7)}
-                eight={() => setValue(8)}
-                nine={() => setValue(9)}
-                negative={() => negate()}
-                check={() => check()}
-            />
+        <View>
+            <Modal
+                isVisible={mathGameVisible}
+                onRequestClose={() =>closeMathGame()}
+                animationIn='rubberBand'
+                animationOut='fadeOut'
+                swipeDirection='right'
+                style={{ margin: 30 }}
+                onSwipeComplete={() => closeMathGame()}
+                hideModalContentWhileAnimating={true}
+            //coverScreen = {false}
+
+            >
+
+                <View style={styles.container}>
+                    <Text style={styles.text}>{first} {firstOperator} {sec} {secOperator} {third}</Text>
+                    <View style={styles.display}>
+                        {correct == null ?
+                            <Text style={styles.text}>{display}</Text>
+                            : correct
+                                ? <Icon name="check" size={60} color="green" />
+                                : <Icon name="times" size={60} color="red" />
+                        }
+                    </View>
+                    <NumberPad
+                        zero={() => setValue(0)}
+                        one={() => setValue(1)}
+                        two={() => setValue(2)}
+                        three={() => setValue(3)}
+                        four={() => setValue(4)}
+                        five={() => setValue(5)}
+                        six={() => setValue(6)}
+                        seven={() => setValue(7)}
+                        eight={() => setValue(8)}
+                        nine={() => setValue(9)}
+                        negative={() => negate()}
+                        check={() => check()}
+                    />
+                </View>
+
+
+            </Modal>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container : {
+    container: {
         flex: 1,
         backgroundColor: '#000000',
         alignItems: 'center',
-        paddingTop: 130,
+        paddingTop: 0,
         paddingHorizontal: 20,
         marginTop: 40,
         width: Dimensions.get('window').width,
     },
-    text : {
+    text: {
         color: '#FFFFFF',
         fontSize: 60,
         textAlign: 'center',
     },
-    ok : {
+    ok: {
         color: '#FFFFFF',
         fontSize: 20,
         textAlign: 'center',
     },
-    button : {
+    button: {
         width: 50,
         height: 60,
         borderRadius: 0,
         justifyContent: 'center',
     },
-    buttonsRow : {
+    buttonsRow: {
         flexDirection: 'row',
         alignSelf: 'stretch',
         justifyContent: 'space-between',
         paddingTop: 15,
     },
-    numberPad : {
+    numberPad: {
         backgroundColor: '#000000',
         width: Dimensions.get('window').width * 0.7,
         height: Dimensions.get('window').height * 0.4,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    display : {
+    display: {
         height: Dimensions.get('window').height * 0.1,
     }
 })
