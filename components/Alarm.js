@@ -1,6 +1,7 @@
 import React, { useEffect, useState, } from 'react';
 import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import TimeTools, { getTime, getDate, timeEqual, timeEqual2 } from "./TimeTools";
+import { snoozeAlarm, dismissAlarm } from './AlarmManagementTools';
 import AlarmManager from './AlarmManager/AlarmManager';
 import Clock from "./Clock";
 import TimeWheel from './AlarmManager/TimeWheel';
@@ -25,14 +26,20 @@ function Alarm() {
     const checkAlarm = () => {
         //console.log(currTime + "," + currDate + "//" + listOfAlarm)
         // THIS MIGHT BE DAMN SLOW
-        for (var i = 0; i < listOfAlarm.length; i++) {
-            (listOfAlarm[i].isOn && timeEqual(currTime, listOfAlarm[i].time, currDate, listOfAlarm[i].date))
-                ? ringAlarm(listOfAlarm[i].time + " " + listOfAlarm[i].date, i)
-                : {}
+        if (listOfAlarm !== undefined) {
+            for (var i = 0; i < listOfAlarm.length; i++) {
+                (listOfAlarm[i].isOn && timeEqual(currTime, listOfAlarm[i].time, currDate, listOfAlarm[i].date))
+                    ? ringAlarm(listOfAlarm[i].time + " " + listOfAlarm[i].date, i)
+                    : timeEqual(currTime, listOfAlarm[i].time, currDate, listOfAlarm[i].date)
+                        ? handleDisabledAlarm(i)
+                        : {}
+            }
         }
     }
 
     const ringAlarm = (timeDate, index) => {
+
+
         console.log('ring');
         Alert.alert('testtest',
             "ALARM " + index + "SCHEDULED ON " + timeDate + "RING RING RING",
@@ -42,18 +49,28 @@ function Alarm() {
 
             ],
             { cancelable: false });
-        playAlarm();
+        playAlarmSound();
 
     }
-
     //////////////////////////////////////////////////
 
+    const handleDisabledAlarm = (index) => {
+        setListOfAlarm(dismissAlarm(index, listOfAlarm));
+    }
+
     const handleDismissedAlarm = (index) => {
-        toggleAlarm();
+        stopAlarmSound();
+        dismissAlarmSound();
+        setListOfAlarm(dismissAlarm(index, listOfAlarm));
     }
 
     const handleSnoozedAlarm = (index) => {
+        stopAlarmSound();
+        console.log(listOfAlarm);
 
+        setListOfAlarm(snoozeAlarm(index, listOfAlarm));
+
+        console.log(listOfAlarm);
     }
 
 
@@ -64,17 +81,21 @@ function Alarm() {
     ///////////////////////////////////////ALARM RING MANGEMENT 
 
     useEffect(() => {
-        Audio.setAudioModeAsync({
-            allowRecordingIOS: false,
-            interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-            playsInSilentModeIOS: true,
-            interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
-            shouldDuckAndroid: true,
-            staysActiveInBackground: true,
-            playThroughEarpieceAndroid: false
-        });
+        try {
+            Audio.setAudioModeAsync({
+                allowRecordingIOS: false,
+                interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+                playsInSilentModeIOS: true,
+                interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+                shouldDuckAndroid: true,
+                staysActiveInBackground: true,
+                playThroughEarpieceAndroid: false
+            });
 
-        loadAudio();
+            loadAudio();
+        } catch (e) {
+            console.log(e);
+        }
     }, [])
 
 
@@ -86,16 +107,26 @@ function Alarm() {
 
     const loadAudio = async () => {
         try {
-            const playbackInstance = new Audio.Sound();
+            const sound = new Audio.Sound();
+
+            //playbackInstance.createAsync(require('./Sound/1.mp3'), status);
+
             //const source = {
             const status = {
                 shouldPlay: isPlaying,
                 volume
             }
+            console.log(playbackInstance);
+            sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate(status))
+            await sound.loadAsync(require('./Sound/1.mp3'), status, true)
 
-            playbackInstance.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate(status))
-            await playbackInstance.loadAsync(require('./Sound/song.mp3'), status, false)
-            setPlayBackInstance(playbackInstance);
+            setPlayBackInstance(sound);
+
+            console.log("loaded");
+            console.log(playbackInstance)
+            console.log(status);
+
+
 
         } catch (e) {
             console.log(e);
@@ -107,20 +138,29 @@ function Alarm() {
         setIsBuffering(newStatus);
     }
 
-    const toggleAlarm = async () => {
+    const toggleAlarmSound = async () => {
         isPlaying ? await playbackInstance.pauseAsync() : await playbackInstance.playAsync()
 
         setIsPlaying(!isPlaying);
     }
 
-    const playAlarm = async () => {
+    const stopAlarmSound = async () => {
+        console.log('stop alarm sound')
+        await playbackInstance.stopAsync()
+        setIsPlaying(false);
+    }
+
+    const playAlarmSound = async () => {
+        console.log('plauying alarm sound')
         await playbackInstance.playAsync()
         setIsPlaying(true);
     }
 
+    const dismissAlarmSound = async () => {
+        playbackInstance.unloadAsync();
+    }
 
-
-
+    /////////////////////////////////////////TIMEWHEEL MANAGEMENT
     const onChange = duration => {
         const { hours, minutes, seconds } = duration;
         setState({ hours, minutes, seconds });
@@ -149,13 +189,13 @@ function Alarm() {
                         {checkAlarm()}
                         {(!timeWheelVisible)
                             ? <TouchableOpacity
-                                onPress = {() => toggleTimeWheel()}
+                                onPress={() => toggleTimeWheel()}
                                 onLongPressed={() => toggleTimeWheel()}
-                                disabled = {false}>
-                                <Text style = {styles.timeFont}>{currTime}</Text>
+                                disabled={false}>
+                                <Text style={styles.timeFont}>{currTime}</Text>
                             </TouchableOpacity>
                             : <TouchableOpacity
-                                disabled = {true}>
+                                disabled={true}>
                                 <TimeWheel
                                     quickSetAlarmTime={quickSetAlarmTime}
                                     setQuickSetAlarmTime={setQuickSetAlarmTime}
@@ -166,23 +206,6 @@ function Alarm() {
                     </Text>
                 </View>
 
-
-
-
-                {/* <TouchableOpacity
-                    disable={true}
-                    onLongPress={() => toggleTimeWheel()}>
-                    <Text style={styles.timeFont}>
-                        {checkAlarm()}
-                        {(!timeWheelVisible)
-                            ? currTime
-                            : <TimeWheel
-                                quickSetAlarmTime={quickSetAlarmTime}
-                                setQuickSetAlarmTime={setQuickSetAlarmTime}
-                            />
-                        }
-                    </Text>
-                </TouchableOpacity> */}
                 <Text style={styles.dateFont}>
                     {currDate}
                 </Text>

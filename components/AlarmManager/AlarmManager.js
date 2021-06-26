@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
 import { getTime, getDate, compareTime } from "../TimeTools";
+import { addAlarm, deleteAlarm, toggleAlarm, resetAllAlarm } from "../AlarmManagementTools";
 import TimeWheel from './TimeWheel';
-import AlarmSetting from './AlarmSetting';
+import AlarmSetting from '../AlarmSetting/AlarmSetting';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import SleepCalculator from './SleepCalculator/SleepCalculator';
 import { Switch } from 'react-native-paper';
@@ -37,21 +38,18 @@ function AlarmManager(props) {
 
     /////////////////////////////////////////////////////////////
     // ALARM MANAGEMENT 
-
     const handleNewAlarm = (newAlarmTime, newAlarmDate) => {
-        const newAlarmList = [
-            {
-                time: newAlarmTime,
-                date: newAlarmDate,
-                isOn: true
-            }
-            , ...listOfAlarm
-        ];
-        setListOfAlarm(newAlarmList);
-        //{ sleepCalculatorPressed && resetSleepCalculatorPress(); }
-        // { !timeWheelVisible && resetQuickSetAlarm(); }
-
+        setListOfAlarm(addAlarm(newAlarmTime, newAlarmDate, listOfAlarm))
         return true;
+    }
+
+    const handleToggleAlarm = (alarm, index) => {
+        setListOfAlarm(toggleAlarm(alarm, index, listOfAlarm));
+    }
+
+
+    const clearAllAlarm = () => {
+        setListOfAlarm(resetAllAlarm());
     }
 
     const showAllAlarm = (listOfAlarm) => {
@@ -60,7 +58,7 @@ function AlarmManager(props) {
 
                 <View key={index} style={styles.checkbox} >
                     <TouchableOpacity style={styles.alarmtext2}
-                        onPress={() => openAlarmSettings(index)
+                        onPress={() => openAlarmSettings(index, alarm)
                         }>
                         <Text style={styles.alarmtext3}>
                             {alarm.time + ", " + alarm.date}
@@ -72,16 +70,11 @@ function AlarmManager(props) {
                         color='pink'
                         value={alarm.isOn}
                         onValueChange={
-                            () => toggleAlarm(alarm, index)
+                            () => handleToggleAlarm(alarm, index)
                         }
                     />
-                    {/* <CheckBox
-                        key={index}
-                        center='true'
-                        onIconPress={() => toggleAlarm(alarm, index)}
-                        checked={alarm.isOn}
-                        checkedColor='white'
-                    /> */}
+
+
                 </View>
 
 
@@ -89,33 +82,16 @@ function AlarmManager(props) {
         );
     }
 
-    const toggleAlarm = (alarm, index) => {
-        const newToggledAlarmList = [
-            ...listOfAlarm.slice(0, index),
-            {
-                time: alarm.time,
-                date: alarm.date,
-                isOn: !alarm.isOn
-            },
-            ...listOfAlarm.slice(index + 1)
-        ];
-        console.log(newToggledAlarmList);
-        setListOfAlarm(newToggledAlarmList);
-    }
-
-    const clearAllAlarm = () => {
-        setListOfAlarm([]);
-    }
-
-
     /////////////////////////////////////////////////////////////////
     //Alarm Setting 
 
     const [alarmSettingVisible, setAlarmSettingVisible] = useState(false);
+    const [alarmObj, setAlarmObj] = useState();
     const [alarmIndex, setAlarmIndex] = useState();
-    const openAlarmSettings = (index) => {
+    const openAlarmSettings = (index, alarm) => {
         setAlarmSettingVisible(true);
         setAlarmIndex(index)
+        setAlarmObj(alarm)
     }
 
     //////////////////////////////////////////////////////////////
@@ -212,11 +188,16 @@ function AlarmManager(props) {
             </ScrollView>
 
             <AlarmSetting
-                alarmIndex={alarmIndex}
-                setAlarmIndex={setAlarmIndex}
-                alarmSettingVisible={alarmSettingVisible}
-                setAlarmSettingVisible={setAlarmSettingVisible}
-            />
+                        alarmIndex={alarmIndex}
+                        alarmObj={alarmObj}
+                        setAlarmIndex={setAlarmIndex}
+                        alarmSettingVisible={alarmSettingVisible}
+                        setAlarmSettingVisible={setAlarmSettingVisible}
+                        listOfAlarm={listOfAlarm}
+                        setListOfAlarm={setListOfAlarm}
+                    />
+
+
 
 
         </>
