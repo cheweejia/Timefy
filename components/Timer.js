@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react'
 import { Animated, StyleSheet, View, Text, TouchableOpacity, FlatList, Dimensions } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
-import ToggleSwitch from 'toggle-switch-react-native'
+//import ToggleSwitch from 'toggle-switch-react-native'
 import Pomodoro from "./Pomodoro"
 
 const numOfHours = [...Array(24).keys()]
@@ -87,10 +87,6 @@ export default class App extends Component {
       pomodoro: false,
     }
   }
-  //
-  //  componentWillUnmount() {
-  //    clearInterval(this.myInterval)
-  //  }
 
   start = () => {
     if (this.state.hours != 0 || this.state.minutes != 0 || this.state.seconds != 0) {
@@ -123,28 +119,18 @@ export default class App extends Component {
     })
   }
 
-//  pomodoro = () => {
-//    this.setState({
-//      pomodoro: true,
-//    })
-//  }
-
   render() {
     const { start, isPlaying, hours, minutes, seconds, pomodoro } = this.state
     return (
       <View style={styles.container}>
         { !start && (
-            <ToggleSwitch
-              isOn={pomodoro}
-              onColor="tomato"
-              offColor="grey"
-              label="Pomodoro"
-              labelStyle={{ color: "black", fontWeight: "900" }}
-              size="large"
-              onToggle={isOn => this.setState({
+            <PomodoroMode
+              title='Pomodoro'
+              color='white'
+              background={pomodoro ? 'tomato' : '#CFCFCF'}
+              onPress={() => this.setState({
                 pomodoro: !pomodoro,
               })}
-              disabled={false}
             />
         )}
 
