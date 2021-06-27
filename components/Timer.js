@@ -125,7 +125,7 @@ export default class App extends Component {
       <View style={styles.container}>
         { !start && (
             <PomodoroMode
-              title='Pomodoro'
+              title={pomodoro ? 'Timer' : 'Pomodoro'}
               color='white'
               background={pomodoro ? 'tomato' : '#CFCFCF'}
               onPress={() => this.setState({
