@@ -3,6 +3,7 @@ import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import Modal from 'react-native-modal';
 import { getTime, } from '../../TimeTools'
+import { multiply } from 'react-native-reanimated';
 
 function SleepTime(props) {
     const { sleepTimeVisible, setSleepTimeVisible, quickSetAlarmTime, setQuickSetAlarmTime, sleepCalculatorPressed, setSleepCalculatorPressed } = props;
@@ -29,8 +30,8 @@ function SleepTime(props) {
         const new_min = new_total_min < 0 ? (new_total_min + 24 * 60) % 60 : new_total_min % 60;
         const new_hr = new_total_min < 0 ? (new_total_min + 24 * 60 - new_min) / 60 : (new_total_min - new_min) / 60;
 
-
-        return new_hr + ":" + new_min + ":00";
+        const pad = (num) => num < 10 ? '0' + num : num;
+        return pad(new_hr) + ":" + pad(new_min) + ":00";
     }
 
     return (

@@ -123,13 +123,17 @@ function Alarm() {
     }
 
     const handleDismissedAlarm = (index) => {
-        if (mathGameSolved) {
-            stopAlarmSound();
-            dismissAlarmSound();
-            setListOfAlarm(dismissAlarm(index, listOfAlarm));
-        } else {
-            setMathGameVisible(true);
-        }
+        // if (mathGameSolved) {
+        //     stopAlarmSound();
+        //     dismissAlarmSound();
+        //     setListOfAlarm(dismissAlarm(index, listOfAlarm));
+        // } else {
+        //     setMathGameVisible(true);
+        // }
+
+        stopAlarmSound();
+        dismissAlarmSound();
+        setListOfAlarm(dismissAlarm(index, listOfAlarm));
     }
 
     const handleSnoozedAlarm = (index) => {
@@ -146,9 +150,9 @@ function Alarm() {
     const [mathGameVisible, setMathGameVisible] = useState(false);
     const [mathGameSolved, setMathGameSolved] = useState(false);
 
-    useEffect(() => {
-        { mathGameSolved && handleDismissedAlarm }
-    }, [mathGameSolved])
+    // useEffect(() => {
+    //     { mathGameSolved && handleDismissedAlarm }
+    // }, [mathGameSolved])
 
 
 
