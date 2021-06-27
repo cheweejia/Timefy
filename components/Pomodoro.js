@@ -34,7 +34,7 @@ export default function Pomodoro() {
     const [start, setStart] = useState(false)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isBreak, setIsBreak] = useState(false)
-    const [minutes, setMinutes] = useState(5)
+    const [minutes, setMinutes] = useState(25)
     const [interval, setInterval] = useState(1)
     const [key, setKey] = useState(0)
 
@@ -55,7 +55,7 @@ export default function Pomodoro() {
         setStart(false)
         setIsPlaying(false)
         setIsBreak(false)
-        setMinutes(5)
+        setMinutes(25)
         setInterval(1)
         setKey(prevKey => prevKey + 1)
     }
@@ -66,7 +66,7 @@ export default function Pomodoro() {
                 <CountdownCircleTimer
                     key={key}
                     isPlaying={isPlaying}
-                    duration={minutes}
+                    duration={minutes * 60}
                     colors={ isBreak
                         ? [['#87CEFA', 1]]
                         : [['#FF6347', 1]]
@@ -75,11 +75,11 @@ export default function Pomodoro() {
                     onComplete={() => {
                         if (!isBreak) {
                             setIsBreak(!isBreak)
-                            interval % 4 == 0 ? setMinutes(3) : setMinutes(1)
+                            interval % 4 == 0 ? setMinutes(15) : setMinutes(5)
                             setInterval(interval + 1)
                         } else {
                             setIsBreak(!isBreak)
-                            setMinutes(5)
+                            setMinutes(25)
                         }
                         setKey(prevKey => prevKey + 1)
                     }}
