@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: 130,
+        paddingTop: (Dimensions.get('window').width * 0.10),
         paddingHorizontal: 20,
     },
     button: {

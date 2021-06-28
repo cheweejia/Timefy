@@ -58,8 +58,10 @@ export function snoozeAlarm(index, currListOfAlarm) {
     const newSnoozeTime = convertSecToTime(convertTimeToSec(getTime(new Date())) + currListOfAlarm[index].snoozeDuration);
     const alarm = currListOfAlarm[index];
 
+    var newAlarmList = [];
+
     if (alarm.snoozeDuration > 0) {
-        const newAlarmList = [
+         newAlarmList = [
             ...currListOfAlarm.slice(0, index),
             {
                 time: newSnoozeTime > "23:59:59" ? resetOverflowTime(newSnoozeTime) : newSnoozeTime,

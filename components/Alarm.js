@@ -132,7 +132,6 @@ function Alarm() {
         // }
 
         stopAlarmSound();
-        dismissAlarmSound();
         setListOfAlarm(dismissAlarm(index, listOfAlarm));
     }
 
