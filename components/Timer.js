@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    paddingTop: (Dimensions.get('window').width * 0.10),
+    paddingTop: (Dimensions.get('window').height * 0.10),
     paddingHorizontal: 20,
   },
   duration: {
