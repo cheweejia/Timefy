@@ -6,6 +6,8 @@ import AlarmManager from './AlarmManager/AlarmManager';
 import Clock from "./Clock";
 import TimeWheel from './AlarmManager/TimeWheel';
 import { Audio } from 'expo-av';
+import SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MathGame from './MathGame';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
@@ -15,7 +17,7 @@ import { Button } from 'react-native-elements';
 
 function AlarmScreen() {
     return (
-                    
+
         {/* <Modal
                         isVisible={alarmScreenVisible}
                         onRequestClose={() => closeMathGame()}
@@ -65,15 +67,46 @@ function Alarm() {
     const [currTime, setCurrTime] = useState(getTime(new Date()));
     const [currDate, setCurrDate] = useState(getDate(new Date()));
 
-    const [listOfAlarm, setListOfAlarm] = useState([]);
-
-
     useEffect(() => {
         let secTimer = setInterval(() => {
             setCurrTime(getTime(new Date()));
         }, 1000);
         return () => clearInterval(secTimer);
     }, []);
+
+    ///////////////////////////////////////////////////// LOCAL STORAGE
+    const [listOfAlarm, setListOfAlarm] = useState([]);
+
+    async function save(key, value) {
+        console.log('save === ' + value)
+        await AsyncStorage.setItem(key, value);
+    }
+    
+    async function getValueFor(key) {
+    
+        try {
+            const value = await AsyncStorage.getItem('listOfAlarm')
+            console.log('value ==== ' + value)
+            if(value !== null) {
+                setListOfAlarm(JSON.parse(value));
+            } else {
+                setListOfAlarm([]);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        getValueFor('listOfAlarm')
+    }, [])
+
+    useEffect(() => {
+        console.log('loa changed')
+        save('listOfAlarm', JSON.stringify(listOfAlarm));
+    }, [listOfAlarm])
+
+/////////////////////////////////////////////////////
 
     const checkAlarm = () => {
         //console.log(currTime + "," + currDate + "//" + listOfAlarm)
@@ -193,15 +226,15 @@ function Alarm() {
                 shouldPlay: isPlaying,
                 volume
             }
-            console.log(playbackInstance);
+            //console.log(playbackInstance);
             sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate(status))
             await sound.loadAsync(require('./Sound/1.mp3'), status, true)
 
             setPlayBackInstance(sound);
 
-            console.log("loaded");
-            console.log(playbackInstance)
-            console.log(status);
+            //console.log("loaded");
+            //console.log(playbackInstance)
+            //console.log(status);
 
 
 
@@ -312,7 +345,7 @@ function Alarm() {
             }
 
 
-                    {/* <Modal
+            {/* <Modal
                         isVisible={alarmScreenVisible}
                         onRequestClose={() => closeMathGame()}
                         animationIn='rubberBand'
