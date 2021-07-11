@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import SleepTime from './SleepTime';
 import WakeUpTime from './WakeUpTime';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 function SleepCalculator(props) {
     const { timeWheelVisible, quickSetAlarmTime, setQuickSetAlarmTime, sleepCalculatorPressed, setSleepCalculatorPressed} = props;
@@ -21,15 +22,25 @@ function SleepCalculator(props) {
         <View>
             {!timeWheelVisible
                 ? <Button
-                    title='When to wake up ?'
-                    type='outline'
+                    title='When To Sleep?'
+                    titleStyle={styles.wakeUp}
+                    icon={
+                        <Icon name="bed" size={35} color="black" />
+                    }
+                    iconPosition="top"
+                    type="clear"
                     onPress={() => {
                         toggleWakeUpTime();
                     }}
                 />
                 : <Button
-                    title='When to sleep ?'
-                    type='outline'
+                    title='When To Wake Up?'
+                    titleStyle={styles.wakeUp}
+                    icon={
+                        <Icon name="bed" size={35} color="black" />
+                    }
+                    iconPosition="top"
+                    type="clear"
                     onPress={() => {
                         toggleSleepTime();
                     }}
@@ -55,5 +66,12 @@ function SleepCalculator(props) {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    wakeUp: {
+        fontSize: 13,
+        color: 'black',
+    },
+})
 
 export default SleepCalculator;
