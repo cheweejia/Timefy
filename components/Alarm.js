@@ -131,7 +131,8 @@ function Alarm() {
 
         //setCurrRingAlarmIndex(index);
         //setAlarmScreenVisible(alarmScreenVisible);
-        console.log('ring');
+        console.log('ring');    
+        playAlarmSound();
         Alert.alert('testtest',
             "ALARM " + index + "SCHEDULED ON " + timeDate + "RING RING RING"
             ,
@@ -143,7 +144,6 @@ function Alarm() {
             { cancelable: false, }
 
         );
-        playAlarmSound();
 
 
     }
