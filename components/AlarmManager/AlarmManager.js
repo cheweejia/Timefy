@@ -9,9 +9,7 @@ import AlarmSetting from '../AlarmSetting/AlarmSetting';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import SleepCalculator from './SleepCalculator/SleepCalculator';
 import { Switch } from 'react-native-paper';
-
-
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 function AlarmManager(props) {
 
@@ -56,23 +54,27 @@ function AlarmManager(props) {
         return (
             listOfAlarm.map((alarm, index) => (
 
-                <View key={index} style={styles.checkbox} >
-                    <TouchableOpacity style={styles.alarmtext2,
-
-                    {
-                        backgroundColor: isDay2(alarm.time) ? 'rgba(255, 215, 154, 1.0)' : 'rgba(132, 151, 243, 1.0)',
-                        borderWidth: 3,
-                        borderColor: 'white',
-                        borderTopLeftRadius: 15,
-                        borderTopRightRadius: 15,
-                        borderBottomRightRadius: 15,
-                        borderBottomLeftRadius: 15,
-                    }}
-                        onPress={() => openAlarmSettings(index, alarm)
-                        }>
+                <View key={index} style={{
+                    backgroundColor: isDay2(alarm.time) ? 'rgba(255, 209, 91, 0.3)' : 'rgba(96, 108, 218, 0.3)',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: "center",
+                    marginBottom: 2,
+                    paddingLeft: 20,
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                    borderBottomRightRadius: 10,
+                    borderBottomLeftRadius: 10,
+                }}>
+                    <TouchableOpacity
+                        style={styles.alarmtext2}
+                        onPress={() => openAlarmSettings(index, alarm)}
+                    >
                         <Text style={styles.alarmtext3}>
-                            {alarm.time + ", " + alarm.date}
-
+                            {alarm.time.slice(0, 5)}
+                        </Text>
+                        <Text style={styles.dateText}>
+                            {"Mon" + ", " + alarm.date.slice(0, 6)}
                         </Text>
                     </TouchableOpacity>
                     <Switch
@@ -83,8 +85,6 @@ function AlarmManager(props) {
                             () => handleToggleAlarm(alarm, index)
                         }
                     />
-
-
                 </View>
 
 
@@ -139,10 +139,13 @@ function AlarmManager(props) {
 
             <View style={styles.button}>
                 <Button
-                    color="blue"
                     title="Set"
-                    type="outline"
-                    fontSize="20"
+                    titleStyle={styles.set}
+                    icon={
+                        <Icon name="plus" size={35} color="black" />
+                    }
+                    iconPosition="top"
+                    type="clear"
                     onPress={() => {
                         timeWheelVisible
                             ? handleNewAlarm(quickSetAlarmTime,
@@ -164,37 +167,40 @@ function AlarmManager(props) {
                 {
                     !timeWheelVisible
                         ? <Button
-                            color="blue"
-                            title="Clear All "
-                            type="outline"
-                            fontSize="20"
+                            title="Delete"
+                            titleStyle={styles.set}
+                            icon={
+                                <Icon name="trash" size={35} color="black" />
+                            }
+                            type="clear"
+                            iconPosition="top"
                             onPress={() => {
                                 clearAllAlarm();
                             }}
                         />
                         : <Button
-                            color="blue"
-                            title="Go Back"
-                            type="outline"
-                            fontSize="20"
+                            title="Back"
+                            titleStyle={styles.back}
+                            icon={
+                                <Icon name="arrow-left" size={35} color="black" />
+                            }
+                            type="clear"
+                            iconPosition="top"
                             onPress={() => {
                                 setTimeWheelVisible(false);
                             }}
                         />
                 }
-
-
-
             </View>
 
             <ScrollView style={styles.top}>
-                <Text style={styles.alarmtext1}>
+                <View>
                     {
                         (listOfAlarm.length > 0)
                             ? showAllAlarm(listOfAlarm)
-                            : <Text style={styles.alarmtext1}>No alarm</Text>
+                            : <Text style={styles.noAlarm}>No Alarm</Text>
                     }
-                </Text>
+                </View>
             </ScrollView>
 
             <AlarmSetting
@@ -206,10 +212,6 @@ function AlarmManager(props) {
                 listOfAlarm={listOfAlarm}
                 setListOfAlarm={setListOfAlarm}
             />
-
-
-
-
         </>
     );
 }
@@ -220,26 +222,41 @@ const styles = StyleSheet.create({
         fontSize: 30,
         textAlign: 'center',
         color: 'white',
-        backgroundColor: 'black',
+        backgroundColor: '#e0e0e0',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
-
-
     },
-    alarmtext3: {
-        fontSize: 20,
-        padding: 10
+    noAlarm: {
+        padding: 20,
+        fontSize: 30,
+        textAlign: 'center',
+        color: 'white',
+        backgroundColor: '#e0e0e0',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
     },
     alarmtext2: {
         padding: 10,
         fontSize: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
         //backgroundColor: 'lightpink',
-
+    },
+    alarmtext3: {
+        fontSize: 35,
+        paddingRight: 20,
+    },
+    dateText: {
+        fontSize: 15,
+        padding: 5,
     },
     button: {
-        width: Dimensions.get('window').width,
+        width: Dimensions.get('window').width * 0.9,
         flex: 0.2,
         flexDirection: "row",
         backgroundColor: '#FFFFFF',
@@ -261,16 +278,18 @@ const styles = StyleSheet.create({
     top: {
         flex: 0.3,
         padding: 10,
-        alignSelf: 'stretch'
-
+        alignSelf: 'stretch',
     },
     checkbox: {
-
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: "center",
         padding: 10,
-        paddingLeft: 20.
+        paddingLeft: 20,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
     },
     modalView: {
         margin: 20,
@@ -287,6 +306,14 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
+    set: {
+        color: "black",
+        fontSize: 13,
+    },
+    back: {
+        color: "black",
+        fontSize: 13,
+    }
 });
 
 export default AlarmManager;

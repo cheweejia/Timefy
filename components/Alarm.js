@@ -1,5 +1,5 @@
 import React, { useEffect, useState, } from 'react';
-import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import TimeTools, { getTime, getDate, timeEqual, timeEqual2 } from "./TimeTools";
 import { snoozeAlarm, dismissAlarm } from './AlarmManagementTools';
 import AlarmManager from './AlarmManager/AlarmManager';
@@ -290,37 +290,27 @@ function Alarm() {
     }
 
     return (
-        <>
-
-            <View style={styles.timedate}>
-                <Clock />
-
-                <View>
-                    <Text style={styles.timeFont}>
-                        {checkAlarm()}
-                        {(!timeWheelVisible)
-                            ? <TouchableOpacity
-                                onPress={() => toggleTimeWheel()}
-                                onLongPressed={() => toggleTimeWheel()}
-                                disabled={false}>
-                                <Text style={styles.timeFont}>{currTime}</Text>
-                            </TouchableOpacity>
-                            : <TouchableOpacity
-                                disabled={true}>
-                                <TimeWheel
-                                    quickSetAlarmTime={quickSetAlarmTime}
-                                    setQuickSetAlarmTime={setQuickSetAlarmTime}
-                                />
-                            </TouchableOpacity>
-
-                        }
-                    </Text>
-                </View>
-
-                <Text style={styles.dateFont}>
-                    {currDate}
+        <View style={styles.container}>
+            <Clock />
+            <View style={styles.time}>
+                <Text style={styles.timeFont}>
+                    {checkAlarm()}
+                    {(!timeWheelVisible)
+                        ? <TouchableOpacity
+                            onPress={() => toggleTimeWheel()}
+                            onLongPressed={() => toggleTimeWheel()}
+                            disabled={false}>
+                            <Text style={styles.timeFont}>{currTime}</Text>
+                        </TouchableOpacity>
+                        : <TouchableOpacity
+                            disabled={true}>
+                            <TimeWheel
+                                quickSetAlarmTime={quickSetAlarmTime}
+                                setQuickSetAlarmTime={setQuickSetAlarmTime}
+                            />
+                        </TouchableOpacity>
+                    }
                 </Text>
-
             </View>
 
             <View style={styles.manager}>
@@ -387,22 +377,29 @@ function Alarm() {
                     </Modal> */}
 
 
-        </>
+        </View>
     );
 }
 
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        alignItems: 'center',
+        paddingTop: (Dimensions.get('window').height * 0.11),
+        paddingHorizontal: 20,
+    },
     timedate: {
-        paddingTop: 130,
-        flex: 1.3,
+        paddingTop: 10,
+        flex: 1,
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: -20
+        marginBottom: 0,
     },
     clock: {
-        paddingTop: 80,
+        paddingTop: 0,
         flex: 1,
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
@@ -415,10 +412,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    time: {
+        marginTop: (Dimensions.get('window').height * 0.05),
+        backgroundColor: '#FFFFFF',
+        height: Dimensions.get('window').height * 0.11,
+    },
     timeFont: {
         fontSize: 60,
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
     },
     dateFont: {
         fontSize: 20,

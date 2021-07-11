@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: (Dimensions.get('window').width * 0.10),
+        paddingTop: (Dimensions.get('window').height * 0.10),
         paddingHorizontal: 20,
     },
     button: {
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'stretch',
         justifyContent: 'space-between',
-        marginTop: (Dimensions.get('window').width * 0.15),
+        marginTop: (Dimensions.get('window').height * 0.15),
         marginBottom: 30,
     },
     startButton: {
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: (Dimensions.get('window').width * 0.15),
+        marginTop: (Dimensions.get('window').height * 0.15),
         marginBottom: 30,
     },
     startTitle: {

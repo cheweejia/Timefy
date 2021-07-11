@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         // marginTop: -(Dimensions.get('window').height * 0.009),
         marginBottom: 0,
-        height: (Dimensions.get('window').height * 0.13),
+        height: (Dimensions.get('window').height * 0.10),
     },
     text: {
         color: '#000000',

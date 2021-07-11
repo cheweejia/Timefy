@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'stretch',
     justifyContent: 'space-between',
-    marginTop: (Dimensions.get('window').width * 0.15),
+    marginTop: (Dimensions.get('window').height * 0.15),
     marginBottom: 30,
   },
   text: {
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   countdownTimer : {
-    marginTop : -(Dimensions.get('window').height * 0.1)
+    marginTop : Dimensions.get('window').height * 0.1
   },
   pomodoro: {
     width: 180,
