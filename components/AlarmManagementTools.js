@@ -12,7 +12,8 @@ export function addAlarm(newAlarmTime, newAlarmDate, currListOfAlarm) {
             snoozeDuration: 30,
             repeat: [true, true, true, true, true, true, true],
             oriTime: newAlarmTime,
-            oriDate: newAlarmDate
+            oriDate: newAlarmDate,
+            isDelete: false
         }
         , ...currListOfAlarm
     ];
@@ -45,7 +46,8 @@ export function toggleAlarm(alarm, index, currListOfAlarm) {
             snoozeDuration: alarm.snoozeDuration,
             repeat: alarm.repeat,
             oriTime: alarm.time,
-            oriDate: alarm.date
+            oriDate: alarm.date,
+            isDelete: alarm.isDelete
         },
         ...currListOfAlarm.slice(index + 1)
     ];
@@ -53,6 +55,74 @@ export function toggleAlarm(alarm, index, currListOfAlarm) {
 
     return newAlarmList;
 }
+
+//////////////////////////////////////////////////////////////
+export function toggleDelete(alarm, index, currListOfAlarm) {
+    const newAlarmList = [
+        ...currListOfAlarm.slice(0, index),
+        {
+            time: alarm.time,
+            date: alarm.date,
+            isOn: alarm.isOn,
+            isSnooze: alarm.isSnooze,
+            snoozeDuration: alarm.snoozeDuration,
+            repeat: alarm.repeat,
+            oriTime: alarm.time,
+            oriDate: alarm.date,
+            isDelete: !alarm.isDelete
+        },
+        ...currListOfAlarm.slice(index + 1)
+    ];
+    console.log(newAlarmList);
+
+    return newAlarmList;
+}
+
+function setDelete(index, currListOfAlarm) {
+    const alarm = currListOfAlarm[index];
+    const newAlarmList = [
+        ...currListOfAlarm.slice(0, index),
+        {
+            time: alarm.time,
+            date: alarm.date,
+            isOn: alarm.isOn,
+            isSnooze: alarm.isSnooze,
+            snoozeDuration: alarm.snoozeDuration,
+            repeat: alarm.repeat,
+            oriTime: alarm.time,
+            oriDate: alarm.date,
+            isDelete: false
+        },
+        ...currListOfAlarm.slice(index + 1)
+    ];
+    console.log(newAlarmList);
+
+    return newAlarmList;
+}
+
+export function resetAllDelete(currListOfAlarm) {
+    var newAlarmList = currListOfAlarm ;
+
+    for (var i = 0; i < currListOfAlarm.length ; i++) {
+        newAlarmList = setDelete(i, newAlarmList);
+    }
+
+    return newAlarmList;
+}
+
+export function deleteToggledAlarm(currListOfAlarm) {
+    const newAlarmList = [];
+
+    for(var i = 0; i < currListOfAlarm.length; i++) {
+        if(!currListOfAlarm[i].isDelete) {
+            newAlarmList.push(currListOfAlarm[i]);
+        }
+    }
+
+    return newAlarmList;
+}
+
+////////////////////////////////////////////////////////////////////////
 
 export function snoozeAlarm(index, currListOfAlarm) {
     const newSnoozeTime = convertSecToTime(convertTimeToSec(getTime(new Date())) + currListOfAlarm[index].snoozeDuration);
@@ -71,7 +141,8 @@ export function snoozeAlarm(index, currListOfAlarm) {
                 snoozeDuration: alarm.snoozeDuration,
                 repeat: alarm.repeat,
                 oriTime: alarm.oriTime,
-                oriDate: alarm.oriDate
+                oriDate: alarm.oriDate, 
+                isDelete: alarm.isDelete
             },
             ...currListOfAlarm.slice(index + 1)
         ];
@@ -110,7 +181,9 @@ export function dismissAlarm(index, currListOfAlarm) {
                 snoozeDuration: alarm.snoozeDuration,
                 repeat: alarm.repeat,
                 oriTime: alarm.oriTime,
-                oriDate: alarm.oriDate
+                oriDate: alarm.oriDate,
+                isDelete: alarm.isDelete
+
             }
             ,
             ...currListOfAlarm.slice(index + 1)
@@ -134,7 +207,9 @@ export function changeSnoozeDuration(index, currListOfAlarm, newSnoozeDuration) 
             snoozeDuration: newSnoozeDuration,
             repeat: alarm.repeat,
             oriTime: alarm.time,
-            oriDate: alarm.date
+            oriDate: alarm.date,
+            isDelete: alarm.isDelete
+
         },
         ...currListOfAlarm.slice(index + 1)
     ]
@@ -154,7 +229,9 @@ export function changeRepeatDay(index, currListOfAlarm, newRepeatDay){
             snoozeDuration: alarm.snoozeDuration,
             repeat: newRepeatDay,
             oriTime: alarm.time,
-            oriDate: alarm.date
+            oriDate: alarm.date,
+            isDelete: alarm.isDelete
+
         },
         ...currListOfAlarm.slice(index + 1)
     ]

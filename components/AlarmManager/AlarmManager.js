@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
 import { getTime, getDate, compareTime, isDay2 } from "../TimeTools";
-import { addAlarm, deleteAlarm, toggleAlarm, resetAllAlarm } from "../AlarmManagementTools";
+import { addAlarm, deleteAlarm, toggleAlarm, resetAllAlarm, toggleDelete, deleteToggledAlarm } from "../AlarmManagementTools";
 import TimeWheel from './TimeWheel';
 import AlarmSetting from '../AlarmSetting/AlarmSetting';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import SleepCalculator from './SleepCalculator/SleepCalculator';
-import { Switch } from 'react-native-paper';
+import { Switch, Checkbox } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 function AlarmManager(props) {
@@ -54,43 +54,99 @@ function AlarmManager(props) {
         return (
             listOfAlarm.map((alarm, index) => (
 
-                <View key={index} style={{
-                    backgroundColor: isDay2(alarm.time) ? 'rgba(255, 209, 91, 0.3)' : 'rgba(96, 108, 218, 0.3)',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: "center",
-                    marginBottom: 2,
-                    paddingLeft: 20,
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
-                    borderBottomRightRadius: 10,
-                    borderBottomLeftRadius: 10,
-                }}>
-                    <TouchableOpacity
-                        style={styles.alarmtext2}
-                        onPress={() => openAlarmSettings(index, alarm)}
-                    >
-                        <Text style={styles.alarmtext3}>
-                            {alarm.time.slice(0, 5)}
-                        </Text>
-                        <Text style={styles.dateText}>
-                            {"Mon" + ", " + alarm.date.slice(0, 6)}
-                        </Text>
-                    </TouchableOpacity>
-                    <Switch
-                        key={index}
-                        color= {isDay2(alarm.time) ? 'rgba(255, 215, 154, 1.0)' : 'rgba(132, 151, 243, 1.0)'}
-                        value={alarm.isOn}
-                        onValueChange={
-                            () => handleToggleAlarm(alarm, index)
-                        }
-                    />
-                </View>
+
+                deleteModeVisible ?
+
+                    <View key={index} style={{
+                        //backgroundColor: alarm.isDelete ? 'rgba(96, 108, 218, 0.5)' : 'transparent',
+                        backgroundColor:'transparent',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: "center",
+                        marginBottom: 2,
+                        paddingLeft: 20,
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10,
+                        borderBottomRightRadius: 10,
+                        borderBottomLeftRadius: 10,
+                    }}>
+
+                        <Checkbox
+                            key={index}
+                            color='black'
+                            status={alarm.isDelete ? "checked" : "unchecked"}
+                            onPress={
+                                () => handleToggleDelete(alarm, index)
+                            }
+                        />
+
+                        <View
+                            style={styles.alarmtext2}
+                        >
+                            <Text style={styles.alarmtext3}>
+                                {alarm.time.slice(0, 5)}
+                            </Text>
+                            <Text style={styles.dateText}>
+                                {"Mon" + ", " + alarm.date.slice(0, 6)}
+                            </Text>
+                        </View>
+
+                    </View>
+
+
+                    : <View key={index} style={{
+                        backgroundColor: isDay2(alarm.time) ? 'rgba(255, 209, 91, 0.3)' : 'rgba(96, 108, 218, 0.3)',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: "center",
+                        marginBottom: 2,
+                        paddingLeft: 20,
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10,
+                        borderBottomRightRadius: 10,
+                        borderBottomLeftRadius: 10,
+                    }}>
+                        <TouchableOpacity
+                            style={styles.alarmtext2}
+                            onPress={() => openAlarmSettings(index, alarm)}
+                            onLongPress={() => setDeleteModeVisible(true)}
+                        >
+                            <Text style={styles.alarmtext3}>
+                                {alarm.time.slice(0, 5)}
+                            </Text>
+                            <Text style={styles.dateText}>
+                                {"Mon" + ", " + alarm.date.slice(0, 6)}
+                            </Text>
+                        </TouchableOpacity>
+                        <Switch
+                            key={index}
+                            color={isDay2(alarm.time) ? 'rgba(255, 215, 154, 1.0)' : 'rgba(132, 151, 243, 1.0)'}
+                            value={alarm.isOn}
+                            onValueChange={
+                                () => handleToggleAlarm(alarm, index)
+                            }
+                        />
+
+                    </View>
 
 
             ))
         );
     }
+
+    /////////////////////////////////////////////////////////////////
+    //Delete management 
+
+    const [deleteModeVisible, setDeleteModeVisible] = useState(false);
+
+    const handleToggleDelete = (alarm, index) => {
+        setListOfAlarm(toggleDelete(alarm, index, listOfAlarm));
+    }
+
+    const handleDelete = () => {
+        setListOfAlarm(deleteToggledAlarm(listOfAlarm));
+    }
+
 
     /////////////////////////////////////////////////////////////////
     //Alarm Setting 
@@ -131,6 +187,7 @@ function AlarmManager(props) {
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="datetime"
+                display="spinner"
                 value={new Date()}
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
@@ -138,34 +195,70 @@ function AlarmManager(props) {
             />
 
             <View style={styles.button}>
-                <Button
-                    title="Set"
-                    titleStyle={styles.set}
-                    icon={
-                        <Icon name="plus" size={35} color="black" />
-                    }
-                    iconPosition="top"
-                    type="clear"
-                    onPress={() => {
-                        timeWheelVisible
-                            ? handleNewAlarm(quickSetAlarmTime,
-                                (compareTime(getTime(new Date()), quickSetAlarmTime) > 0)
-                                    ? getDate(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
-                                    : getDate(new Date()))
-                            : showDatePicker()
-                    }}
-                />
 
-                <SleepCalculator
-                    timeWheelVisible={timeWheelVisible}
-                    quickSetAlarmTime={quickSetAlarmTime}
-                    setQuickSetAlarmTime={setQuickSetAlarmTime}
-                    sleepCalculatorPressed={sleepCalculatorPressed}
-                    setSleepCalculatorPressed={setSleepCalculatorPressed}
-                />
+
+                {deleteModeVisible
+                    ? <Button
+                        title="Delete"
+                        titleStyle={styles.set}
+                        icon={
+                            <Icon name="trash" size={35} color="black" />
+                        }
+                        iconPosition="top"
+                        type="clear"
+                        onPress={() => {
+                            handleDelete();
+                            setDeleteModeVisible(false);
+                        }}
+                    />
+                    : <Button
+                        title="Set"
+                        titleStyle={styles.set}
+                        icon={
+                            <Icon name="plus" size={35} color="black" />
+                        }
+                        iconPosition="top"
+                        type="clear"
+                        onPress={() => {
+                            timeWheelVisible
+                                ? handleNewAlarm(quickSetAlarmTime,
+                                    (compareTime(getTime(new Date()), quickSetAlarmTime) > 0)
+                                        ? getDate(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+                                        : getDate(new Date()))
+                                : showDatePicker()
+                        }}
+                    />
+                }
+
+                {deleteModeVisible
+
+                    ? <Button
+                        title="Delete All"
+                        titleStyle={styles.set}
+                        icon={
+                            <Icon name="trash" size={35} color="black" />
+                        }
+                        iconPosition="top"
+                        type="clear"
+                        onPress={() => {
+                            clearAllAlarm();
+                            setDeleteModeVisible(false);
+
+                        }}
+                    />
+
+                    : <SleepCalculator
+                        timeWheelVisible={timeWheelVisible}
+                        quickSetAlarmTime={quickSetAlarmTime}
+                        setQuickSetAlarmTime={setQuickSetAlarmTime}
+                        sleepCalculatorPressed={sleepCalculatorPressed}
+                        setSleepCalculatorPressed={setSleepCalculatorPressed}
+                    />
+                }
+
 
                 {
-                    !timeWheelVisible
+                    !timeWheelVisible && !deleteModeVisible
                         ? <Button
                             title="Delete"
                             titleStyle={styles.set}
@@ -175,21 +268,37 @@ function AlarmManager(props) {
                             type="clear"
                             iconPosition="top"
                             onPress={() => {
-                                clearAllAlarm();
+                                //clearAllAlarm();
+                                setDeleteModeVisible(true);
                             }}
                         />
-                        : <Button
-                            title="Back"
-                            titleStyle={styles.back}
-                            icon={
-                                <Icon name="arrow-left" size={35} color="black" />
-                            }
-                            type="clear"
-                            iconPosition="top"
-                            onPress={() => {
-                                setTimeWheelVisible(false);
-                            }}
-                        />
+                        : deleteModeVisible
+
+                            ? <Button
+                                title="Back"
+                                titleStyle={styles.back}
+                                icon={
+                                    <Icon name="arrow-left" size={35} color="black" />
+                                }
+                                type="clear"
+                                iconPosition="top"
+                                onPress={() => {
+                                    // resetAllDelete(listOfAlarm);
+                                    setDeleteModeVisible(false);
+                                }}
+                            />
+                            : <Button
+                                title="Back"
+                                titleStyle={styles.back}
+                                icon={
+                                    <Icon name="arrow-left" size={35} color="black" />
+                                }
+                                type="clear"
+                                iconPosition="top"
+                                onPress={() => {
+                                    setTimeWheelVisible(false);
+                                }}
+                            />
                 }
             </View>
 
