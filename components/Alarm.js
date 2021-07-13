@@ -102,7 +102,9 @@ function Alarm() {
     }, [])
 
     useEffect(() => {
-        console.log('loa changed')
+        //console.log('new lOA: ' + JSON.stringify(listOfAlarm))
+        console.log('changed loa')
+        console.log(listOfAlarm)
         save('listOfAlarm', JSON.stringify(listOfAlarm));
     }, [listOfAlarm])
 

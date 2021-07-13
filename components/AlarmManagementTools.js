@@ -78,37 +78,37 @@ export function toggleDelete(alarm, index, currListOfAlarm) {
     return newAlarmList;
 }
 
-function setDelete(index, currListOfAlarm) {
-    const alarm = currListOfAlarm[index];
-    const newAlarmList = [
-        ...currListOfAlarm.slice(0, index),
-        {
-            time: alarm.time,
-            date: alarm.date,
-            isOn: alarm.isOn,
-            isSnooze: alarm.isSnooze,
-            snoozeDuration: alarm.snoozeDuration,
-            repeat: alarm.repeat,
-            oriTime: alarm.time,
-            oriDate: alarm.date,
-            isDelete: false
-        },
-        ...currListOfAlarm.slice(index + 1)
-    ];
-    console.log(newAlarmList);
+// function setDelete(index, currListOfAlarm) {
+//     const alarm = currListOfAlarm[index];
+//     const newAlarmList = [
+//         ...currListOfAlarm.slice(0, index),
+//         {
+//             time: alarm.time,
+//             date: alarm.date,
+//             isOn: alarm.isOn,
+//             isSnooze: alarm.isSnooze,
+//             snoozeDuration: alarm.snoozeDuration,
+//             repeat: alarm.repeat,
+//             oriTime: alarm.time,
+//             oriDate: alarm.date,
+//             isDelete: false
+//         },
+//         ...currListOfAlarm.slice(index + 1)
+//     ];
+//     console.log(newAlarmList);
 
-    return newAlarmList;
-}
+//     return newAlarmList;
+// }
 
-export function resetAllDelete(currListOfAlarm) {
-    var newAlarmList = currListOfAlarm ;
+// export function resetAllDelete(currListOfAlarm) {
+//     var newAlarmList = currListOfAlarm ;
 
-    for (var i = 0; i < currListOfAlarm.length ; i++) {
-        newAlarmList = setDelete(i, newAlarmList);
-    }
+//     for (var i = 0; i < currListOfAlarm.length ; i++) {
+//         newAlarmList = setDelete(i, newAlarmList);
+//     }
 
-    return newAlarmList;
-}
+//     return newAlarmList;
+// }
 
 export function deleteToggledAlarm(currListOfAlarm) {
     const newAlarmList = [];
@@ -197,6 +197,8 @@ export function dismissAlarm(index, currListOfAlarm) {
 export function changeSnoozeDuration(index, currListOfAlarm, newSnoozeDuration) {
     const alarm = currListOfAlarm[index];
 
+    console.log("INPUT NEW SNOOZE DURATION" + newSnoozeDuration)
+
     const newAlarmList = [
         ...currListOfAlarm.slice(0, index),
         {
@@ -213,7 +215,7 @@ export function changeSnoozeDuration(index, currListOfAlarm, newSnoozeDuration) 
         },
         ...currListOfAlarm.slice(index + 1)
     ]
-
+    console.log(newAlarmList);
     return newAlarmList;
 }
 

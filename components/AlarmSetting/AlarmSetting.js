@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Button } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Modal from 'react-native-modal';
 import { changeSnoozeDuration, changeRepeatDay } from '../AlarmManagementTools'
@@ -14,17 +15,44 @@ function AlarmSetting(props) {
         setAlarmSettingVisible(!alarmSettingVisible);
     };
 
-    /////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////// Retrieve data from storage
+
+    useEffect(() => {
+        //console.log('Current alarm index is' + alarmIndex);
+        retrieveSnoozeDuration(alarmIndex);
+        retrieveRepeatDay(alarmIndex);
+    }, [alarmIndex])
+
+    const retrieveSnoozeDuration = (index) => {
+        if (index !== undefined) {
+            setSnoozeDuration(listOfAlarm[index].snoozeDuration);
+        }
+    }
+
+    const retrieveRepeatDay = (index) => {
+        if (index !== undefined) {
+            setRepeatDay(listOfAlarm[index].repeat);
+            setSun(listOfAlarm[index].repeat[0]);
+            setMon(listOfAlarm[index].repeat[1]);
+            setTues(listOfAlarm[index].repeat[2]);
+            setWed(listOfAlarm[index].repeat[3]);
+            setThur(listOfAlarm[index].repeat[4]);
+            setFri(listOfAlarm[index].repeat[5]);
+            setSat(listOfAlarm[index].repeat[6]);
+        }
+    }
+
+    ///////////////////////////////////////////////////////////// Save/Discard
 
     const saveAllChanges = () => {
-        console.log(snoozeDuration);
-        setListOfAlarm(changeSnoozeDuration(alarmIndex, listOfAlarm, snoozeDuration));
+        //console.log('SAVE ALL CHANGE LOG 1')
+        //console.log(changeSnoozeDuration(alarmIndex, listOfAlarm, snoozeDuration));
 
         const newRepeat = [sun, mon, tues, wed, thur, fri, sat];
-        setListOfAlarm(changeRepeatDay(alarmIndex, listOfAlarm, newRepeat));
-
         setAlarmSettingVisible(!alarmSettingVisible);
 
+        const newAlarmList = changeRepeatDay(alarmIndex, changeSnoozeDuration(alarmIndex, listOfAlarm, snoozeDuration), newRepeat)
+        setListOfAlarm(newAlarmList);
     }
 
     const discardAllChanges = () => {
@@ -33,34 +61,19 @@ function AlarmSetting(props) {
 
 
     //////////////////////////////////////// Snooze
-    // useEffect(() => {    
-    //     initSetting(alarmIndex, listOfAlarm)
-    // }, [])
-
-    // const initSetting = (alarmIndex, listOfAlarm) => {
-    //     const defaultSnoozeDuration = listOfAlarm[alarmIndex] === undefined ? 60 : listOfAlarm[alarmIndex].snoozeDuration
-    //     setSnoozeDuration(defaultSnoozeDuration)
-    // }
-
-    //const defaultSnoozeDuration = (listOfAlarm === []) ? 60 : listOfAlarm[alarmIndex].snoozeDuration;
-    //console.log(listOfAlarm)
-    // console.log(listOfAlarm)
-    // console.log(alarmIndex)
-    const [snoozeDuration, setSnoozeDuration] = useState(30);
-    //const [tempSnoozeDuration, setTempSnoozeDuration] = useState(30);
-
+    const [snoozeDuration, setSnoozeDuration] = useState();
 
     //////////////////////////////////////////////Repeat
     const [needRepeat, setNeedRepeat] = useState(true);
-    const [repeatDay, setRepeatDay] = useState([true, true, true, true, true, true, true]);
+    const [repeatDay, setRepeatDay] = useState();
 
-    const [sun, setSun] = useState(true);
-    const [mon, setMon] = useState(true);
-    const [tues, setTues] = useState(true);
-    const [wed, setWed] = useState(true);
-    const [thur, setThur] = useState(true);
-    const [fri, setFri] = useState(true);
-    const [sat, setSat] = useState(true);
+    const [sun, setSun] = useState();
+    const [mon, setMon] = useState();
+    const [tues, setTues] = useState();
+    const [wed, setWed] = useState();
+    const [thur, setThur] = useState();
+    const [fri, setFri] = useState();
+    const [sat, setSat] = useState();
 
     // const buttonColorStyle = {
     //     backgroundColor: (isDay(new Date())) ? 'rgba(252, 150, 1, 0.6)' : 'rgba(18, 47, 80, 0.7)'
@@ -121,7 +134,7 @@ function AlarmSetting(props) {
                                 promopt='snooze'
                                 selectedValue={snoozeDuration}
                                 onValueChange={(itemValue, itemIndex) => {
-                                    //console.log(snoozeDuration);
+                                    //console.log('itemvalue ===' + itemValue);
                                     setSnoozeDuration(itemValue);
                                     //console.log(snoozeDuration);
                                 }
@@ -220,7 +233,7 @@ function AlarmSetting(props) {
                                         flexDirection: 'column',
                                         padding: 5,
                                         backgroundColor: wed ? 'rgba(120, 240, 140,1.0)' : 'transparent'
-                                    }}                                    
+                                    }}
                                     onPress={() => setWed(!wed)}
 
                                 >
@@ -242,7 +255,7 @@ function AlarmSetting(props) {
                                         flexDirection: 'column',
                                         padding: 5,
                                         backgroundColor: thur ? 'rgba(120, 240, 140,1.0)' : 'transparent'
-                                    }}                                    
+                                    }}
                                     onPress={() => setThur(!thur)}
 
                                 >
@@ -261,8 +274,8 @@ function AlarmSetting(props) {
                                         borderRadius: 50,
                                         flexDirection: 'column',
                                         padding: 5,
-                                        backgroundColor: fri ?'rgba(120, 240, 140,1.0)' : 'transparent'
-                                    }}                                    
+                                        backgroundColor: fri ? 'rgba(120, 240, 140,1.0)' : 'transparent'
+                                    }}
                                     onPress={() => setFri(!fri)}
 
                                 >
@@ -283,7 +296,7 @@ function AlarmSetting(props) {
                                         flexDirection: 'column',
                                         padding: 5,
                                         backgroundColor: sat ? 'rgba(120, 240, 140,1.0)' : 'transparent'
-                                    }}                                    
+                                    }}
                                     onPress={() => setSat(!sat)}
 
                                 >
