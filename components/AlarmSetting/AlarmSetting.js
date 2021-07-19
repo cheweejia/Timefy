@@ -3,9 +3,11 @@ import { Text, View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from
 import { Picker } from '@react-native-picker/picker';
 import { Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { getTime, getDate} from "../TimeTools";
 
 import Modal from 'react-native-modal';
-import { changeSnoozeDuration, changeRepeatDay } from '../AlarmManagementTools'
+import { changeSnoozeDuration, changeRepeatDay, changeDate, changeTime } from '../AlarmManagementTools'
 
 
 function AlarmSetting(props) {
@@ -21,7 +23,21 @@ function AlarmSetting(props) {
         //console.log('Current alarm index is' + alarmIndex);
         retrieveSnoozeDuration(alarmIndex);
         retrieveRepeatDay(alarmIndex);
+        retrieveCurrDate(alarmIndex);
+        retrieveCurrTime(alarmIndex)
     }, [alarmIndex])
+
+    const retrieveCurrDate = (index) => {
+        if (index !== undefined) {
+            setCurrDate(listOfAlarm[index].date);
+        }
+    }
+
+    const retrieveCurrTime = (index) => {
+        if (index !== undefined) {
+            setCurrTime(listOfAlarm[index].time);
+        }
+    }
 
     const retrieveSnoozeDuration = (index) => {
         if (index !== undefined) {
@@ -51,13 +67,53 @@ function AlarmSetting(props) {
         const newRepeat = [sun, mon, tues, wed, thur, fri, sat];
         setAlarmSettingVisible(!alarmSettingVisible);
 
-        const newAlarmList = changeRepeatDay(alarmIndex, changeSnoozeDuration(alarmIndex, listOfAlarm, snoozeDuration), newRepeat)
-        setListOfAlarm(newAlarmList);
+        const newTimeList = changeTime(alarmIndex, listOfAlarm, currTime)
+        const newDateList = changeDate(alarmIndex, newTimeList, currDate)
+        const newSnoozeList = changeSnoozeDuration(alarmIndex, newDateList, snoozeDuration)
+        const newRepeatList = changeRepeatDay(alarmIndex, newSnoozeList, newRepeat)
+
+        setListOfAlarm(newRepeatList);
     }
 
     const discardAllChanges = () => {
         setAlarmSettingVisible(!alarmSettingVisible);
     }
+
+    //////////////////////////////////////////////Date Time
+    const [currDate, setCurrDate] = useState()
+    const [currTime, setCurrTime] = useState()
+
+    const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+
+    const showTimePicker = () => {
+        setTimePickerVisibility(true);
+    };
+
+    const hideTimePicker = () => {
+        setTimePickerVisibility(false);
+    };
+
+    const handleTimeConfirm = (date) => {
+        //console.warn("Alarmed set at", getTime(date));
+        setCurrTime(getTime(date));
+        hideTimePicker();
+    };
+
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleDateConfirm = (date) => {
+        //console.warn("Alarmed set at", getTime(date));
+        setCurrDate(getDate(date));
+        hideDatePicker();
+    };
 
 
     //////////////////////////////////////// Snooze
@@ -122,6 +178,40 @@ function AlarmSetting(props) {
                         <Text style={styles.alarmtext3}>
                             Alarm {alarmIndex + 1}
                         </Text>
+
+                        <DateTimePickerModal
+                            isVisible={isTimePickerVisible}
+                            mode="time"
+                            display="spinner"
+                            value={currTime}
+                            onConfirm={handleTimeConfirm}
+                            onCancel={hideTimePicker}
+                            style={styles.clock}
+                        />
+
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => showTimePicker()}>
+                                <Text style={styles.currTime}> {currTime} </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <DateTimePickerModal
+                            isVisible={isDatePickerVisible}
+                            mode="date"
+                            display="spinner"
+                            value={currDate}
+                            onConfirm={handleDateConfirm}
+                            onCancel={hideDatePicker}
+                            style={styles.clock}
+                        />
+
+                        <View>
+                            <TouchableOpacity
+                             onPress={() => showDatePicker()}>
+                                <Text style={styles.currDate}> {currDate} </Text>
+                            </TouchableOpacity>
+                        </View>
 
                         <View style={styles.settings}>
                             <Text style={styles.titletext}>
@@ -374,6 +464,18 @@ const styles = StyleSheet.create({
     repeatbuttoncontainer: {
         flexDirection: 'row',
         alignContent: 'space-between'
+    },
+    currDate: {
+        fontSize: 20,
+        color: 'black',
+        padding: 0,
+        alignItems: 'center'
+    },
+    currTime: {
+        fontSize: 50,
+        color: 'black',
+        padding: 0,
+        alignItems: 'center'
     }
 });
 

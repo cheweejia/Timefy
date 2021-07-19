@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
-import { getTime, getDate, compareTime, isDay2 } from "../TimeTools";
+import { getTime, getDate, getDayOfWeek, compareTime, isDay2 } from "../TimeTools";
 import { addAlarm, deleteAlarm, toggleAlarm, resetAllAlarm, toggleDelete, deleteToggledAlarm } from "../AlarmManagementTools";
 import TimeWheel from './TimeWheel';
 import AlarmSetting from '../AlarmSetting/AlarmSetting';
@@ -87,7 +87,7 @@ function AlarmManager(props) {
                                 {alarm.time.slice(0, 5)}
                             </Text>
                             <Text style={styles.dateText}>
-                                {"Mon" + ", " + alarm.date.slice(0, 6)}
+                                { getDayOfWeek(alarm.date) + ", " + alarm.date.slice(0, 6)}
                             </Text>
                         </View>
 
@@ -115,7 +115,7 @@ function AlarmManager(props) {
                                 {alarm.time.slice(0, 5)}
                             </Text>
                             <Text style={styles.dateText}>
-                                {"Mon" + ", " + alarm.date.slice(0, 6)}
+                                {getDayOfWeek(alarm.date) + ", " + alarm.date.slice(0, 6)}
                             </Text>
                         </TouchableOpacity>
                         <Switch

@@ -241,3 +241,49 @@ export function changeRepeatDay(index, currListOfAlarm, newRepeatDay){
     return newAlarmList;
 
 };
+
+export function changeDate(index, currListOfAlarm, newDate){
+    const alarm = currListOfAlarm[index]
+    const newAlarmList = [
+        ...currListOfAlarm.slice(0, index),
+        {
+            time: alarm.time,
+            date: newDate,
+            isOn: alarm.isOn,
+            isSnooze: alarm.isSnooze,
+            snoozeDuration: alarm.snoozeDuration,
+            repeat: alarm.repeat,
+            oriTime: alarm.time,
+            oriDate: alarm.date,
+            isDelete: alarm.isDelete
+
+        },
+        ...currListOfAlarm.slice(index + 1)
+    ]
+
+    return newAlarmList;
+
+};
+
+export function changeTime(index, currListOfAlarm, newTime){
+    const alarm = currListOfAlarm[index]
+    const newAlarmList = [
+        ...currListOfAlarm.slice(0, index),
+        {
+            time: newTime,
+            date: alarm.date,
+            isOn: alarm.isOn,
+            isSnooze: alarm.isSnooze,
+            snoozeDuration: alarm.snoozeDuration,
+            repeat: alarm.repeat,
+            oriTime: alarm.time,
+            oriDate: alarm.date,
+            isDelete: alarm.isDelete
+
+        },
+        ...currListOfAlarm.slice(index + 1)
+    ]
+
+    return newAlarmList;
+
+};
