@@ -116,11 +116,8 @@ export default function Pomodoro() {
             )}
 
             { start && isPlaying && (
-                <View style={{
-                    marginTop: (Dimensions.get('window').width * 0.15),
-                    marginBottom: 30,
-                }}>
-                    <RoundButton
+                <View>
+                    <StartButton
                         title='Pause'
                         color='white' /*'#E33935'*/
                         background='#3D3D3D' /*'#3C1715'*/
@@ -170,7 +167,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'stretch',
         justifyContent: 'space-between',
-        marginTop: (Dimensions.get('window').height * 0.15),
+        marginTop: (Dimensions.get('window').height * 0.1),
         marginBottom: 30,
     },
     startButton: {
@@ -179,14 +176,14 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: (Dimensions.get('window').height * 0.15),
+        marginTop: (Dimensions.get('window').height * 0.1),
         marginBottom: 30,
     },
     startTitle: {
         fontSize: 20,
     },
     countdownTimer : {
-        marginTop : -(Dimensions.get('window').height * 0.1),
+        backgroundColor: '#fff',
     },
     text: {
         fontSize: 18,

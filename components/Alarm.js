@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Alert, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
 import TimeTools, { getTime, getDate, timeEqual, timeEqual2 } from "./TimeTools";
 import { snoozeAlarm, dismissAlarm } from './AlarmManagementTools';
 import AlarmManager from './AlarmManager/AlarmManager';
@@ -430,7 +430,9 @@ export default function Alarm() {
 
     return (
         <View style={styles.container}>
-            <Clock />
+            <View style={styles.clock}>
+                <Clock />
+            </View>
             <View style={styles.time}>
                 <Text style={styles.timeFont}>
                     {checkAlarm()}
@@ -493,7 +495,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
-        paddingTop: (Dimensions.get('window').height * 0.11),
+        marginTop: (Dimensions.get('window').height * 0.075),
         paddingHorizontal: 20,
     },
     timedate: {
@@ -505,9 +507,9 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
     clock: {
-        paddingTop: 0,
+        marginTop: 0,
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -519,9 +521,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     time: {
-        marginTop: (Dimensions.get('window').height * 0.05),
-        backgroundColor: '#FFFFFF',
-        height: Dimensions.get('window').height * 0.11,
+        marginTop: Dimensions.get('window').height * 0.025,
+        backgroundColor: 'rgba(0,0,0,0)',
+        justifyContent: 'center',
+        height: Dimensions.get('window').height * 0.1,
     },
     timeFont: {
         fontSize: 60,

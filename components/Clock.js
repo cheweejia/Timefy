@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Dimensions, Animated, Text } from 'react-native';
 import { isDay } from '../components/TimeTools';
 
-const { width } = Dimensions.get('screen');
-const SIZE = width * 0.8;
+const { height } = Dimensions.get('screen');
+const SIZE = height * 0.35;
 const TICK_INTERVAL = 1000;
 
 function Clock() {
@@ -96,7 +96,6 @@ function Clock() {
   }
 
   return (
-    <Animated.View style={styles.container}>
       <Animated.View style={styles.container}>
         <Animated.View style={[styles.bigQuadran, { transform: [{ scale: bigQuadranScale }]}, BigQuadDynamicColorStyle]} />
         <Animated.View style={[styles.mediumQuadran, { transform: [{ scale: mediumQuadranScale}]}, MediumQuadDynamicColorStyle]} />
@@ -111,7 +110,6 @@ function Clock() {
           <Animated.View style={[styles.seconds]} />
         </Animated.View>
       </Animated.View>
-    </Animated.View>
   );
 };
 
@@ -132,21 +130,21 @@ const styles = StyleSheet.create({
   },
   hours: {
     backgroundColor: 'rgba(0,0,0,0.4)',
-    height: '35%',
-    marginTop: '15%',
+    height: '30%',
+    marginTop: '20%',
     width: 4,
     borderRadius: 4,
   },
   minutes: {
     backgroundColor: 'rgba(0,0,0,0.4)',
-    height: '45%',
-    marginTop: '5%',
+    height: '42%',
+    marginTop: '8%',
     width: 3,
     borderRadius: 3,
   },
   seconds: {
     backgroundColor: 'rgba(227,71,134,1)',
-    height: '45%',
+    height: '42%',
     marginTop: '15%',
     width: 2,
     borderRadius: 2,

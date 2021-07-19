@@ -327,8 +327,8 @@ function AlarmManager(props) {
 
 const styles = StyleSheet.create({
     alarmtext1: {
-        padding: 20,
-        fontSize: 30,
+        padding: Dimensions.get('window').height * 0.025,
+        fontSize: 25,
         textAlign: 'center',
         color: 'white',
         backgroundColor: '#e0e0e0',
@@ -338,8 +338,8 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 20,
     },
     noAlarm: {
-        padding: 20,
-        fontSize: 30,
+        padding: Dimensions.get('window').height * 0.025,
+        fontSize: 25,
         textAlign: 'center',
         color: 'white',
         backgroundColor: '#e0e0e0',
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * 0.9,
         flex: 0.2,
         flexDirection: "row",
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#fff',
         justifyContent: 'space-around',
         alignContent: 'center',
     },
@@ -385,8 +385,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     top: {
-        flex: 0.3,
-        padding: 10,
+        marginTop: 0,
+        flex: 1,
+        padding: 5,
         alignSelf: 'stretch',
     },
     checkbox: {
