@@ -147,11 +147,11 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         // marginTop: -(Dimensions.get('window').height * 0.009),
         marginBottom: 0,
-        height: (Dimensions.get('window').height * 0.10),
+        height: (Dimensions.get('window').height * 0.21),
     },
     text: {
         color: '#000000',
-        fontSize: (Dimensions.get('window').width * 0.13),
+        fontSize: (Dimensions.get('window').width * 0.14),
         textAlign: 'center',
     },
     colon: {

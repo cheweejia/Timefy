@@ -366,7 +366,8 @@ const styles = StyleSheet.create({
     },
     button: {
         width: Dimensions.get('window').width * 0.9,
-        flex: 0.2,
+        //height: Dimensions.get('window').height * 0.
+        flex: 0.25,
         flexDirection: "row",
         backgroundColor: '#fff',
         justifyContent: 'space-around',

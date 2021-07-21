@@ -6,7 +6,7 @@ export function getTime(currDate) {
     const currMin = convertTime(currDate.getMinutes());
     const currSec = convertTime(currDate.getSeconds());
 
-    const time = currHour + ":" + currMin + ":" + "00";
+    const time = currHour + ":" + currMin + ":" + currSec;
 
     return time;
 }
@@ -24,13 +24,23 @@ export function getDate(currDate) {
     return day;
 }
 
+export function getTimeForAlarmSettings(currDate) {
+    const currHour = convertTime(currDate.getHours());
+    const currMin = convertTime(currDate.getMinutes());
+    const currSec = convertTime(currDate.getSeconds());
+
+    const time = currHour + ":" + currMin + ":" + "00";
+
+    return time;
+}
+
 export function getDayOfWeek(currDate) {
     const dateArray = currDate.split(" ")
-    console.log("ARRAY ===="  + JSON.stringify(dateArray) + monthToIndex(dateArray[1]));
+    //console.log("ARRAY ===="  + JSON.stringify(dateArray) + monthToIndex(dateArray[1]));
     const dayOfWeekName = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
 
     const currDayOfWeek = new Date(dateArray[2], monthToIndex(dateArray[1]), dateArray[0]).getDay();
-    console.log("currDate =" + currDate + "currDay = " + currDayOfWeek )
+    //console.log("currDate =" + currDate + "currDay = " + currDayOfWeek )
 
     return dayOfWeekName[currDayOfWeek];
 }

@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { getTime, getDate} from "../TimeTools";
+import { getTimeForAlarmSettings, getDate} from "../TimeTools";
 
 import Modal from 'react-native-modal';
 import { changeSnoozeDuration, changeRepeatDay, changeDate, changeTime } from '../AlarmManagementTools'
@@ -95,7 +95,7 @@ function AlarmSetting(props) {
 
     const handleTimeConfirm = (date) => {
         //console.warn("Alarmed set at", getTime(date));
-        setCurrTime(getTime(date));
+        setCurrTime(getTimeForAlarmSettings(date));
         hideTimePicker();
     };
 

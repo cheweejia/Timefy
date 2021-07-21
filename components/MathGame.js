@@ -122,7 +122,7 @@ export default function MathGame(props) {
 
     return (
         <View>
-            <Modal
+            {/* <Modal
                 isVisible={mathGameVisible}
                 onRequestClose={() =>closeMathGame()}
                 animationIn='rubberBand'
@@ -133,7 +133,7 @@ export default function MathGame(props) {
                 hideModalContentWhileAnimating={true}
             //coverScreen = {false}
 
-            >
+            > */}
 
                 <View style={styles.container}>
                     <Text style={styles.text}>{first} {firstOperator} {sec} {secOperator} {third}</Text>
@@ -160,36 +160,37 @@ export default function MathGame(props) {
                         check={() => check()}
                     />
                 </View>
+                {/* <Button 
+                onPress = {() => {}}
+                title = "Snooze Alarm" /> */}
 
-
-            </Modal>
+{/* 
+            </Modal> */}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#000000',
+        // flex: 0.7,
+        backgroundColor: 'transparent',
         alignItems: 'center',
-        paddingTop: 0,
-        paddingHorizontal: 20,
-        marginTop: 40,
-        width: Dimensions.get('window').width,
+        padding: 40,
+        width: 0.6* Dimensions.get('window').width,
     },
     text: {
-        color: '#FFFFFF',
-        fontSize: 60,
+        color: 'black',
+        fontSize: 30,
         textAlign: 'center',
     },
     ok: {
-        color: '#FFFFFF',
+        color: 'black',
         fontSize: 20,
         textAlign: 'center',
     },
     button: {
         width: 50,
-        height: 60,
+        height: 40,
         borderRadius: 0,
         justifyContent: 'center',
     },
@@ -200,9 +201,9 @@ const styles = StyleSheet.create({
         paddingTop: 15,
     },
     numberPad: {
-        backgroundColor: '#000000',
-        width: Dimensions.get('window').width * 0.7,
-        height: Dimensions.get('window').height * 0.4,
+        backgroundColor: 'transparent',
+        width: Dimensions.get('window').width * 0.6,
+        height: Dimensions.get('window').height * 0.3,
         justifyContent: 'center',
         alignItems: 'center',
     },

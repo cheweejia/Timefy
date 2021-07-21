@@ -207,6 +207,7 @@ export default function Alarm() {
     useEffect(() => {
         let secTimer = setInterval(() => {
             setCurrTime(getTime(new Date()));
+            // checkAlarm();
         }, 1000);
         return () => clearInterval(secTimer);
     }, []);
@@ -253,7 +254,8 @@ export default function Alarm() {
         if (listOfAlarm !== undefined) {
             for (var i = 0; i < listOfAlarm.length; i++) {
                 (listOfAlarm[i].isOn && timeEqual(currTime, listOfAlarm[i].time, currDate, listOfAlarm[i].date))
-                    ? ringAlarm(listOfAlarm[i].time + " " + listOfAlarm[i].date, i)
+                    ? handleRingAlarm(i)
+                    //? ringAlarm(listOfAlarm[i].time + " " + listOfAlarm[i].date, i)
                     : timeEqual(currTime, listOfAlarm[i].time, currDate, listOfAlarm[i].date)
                         ? handleDisabledAlarm(i)
                         : {}
@@ -264,7 +266,14 @@ export default function Alarm() {
     /////////////////////////////////////////////
     const [currRingAlarmIndex, setCurrRingAlarmIndex] = useState();
 
+    const handleRingAlarm = (index) => {
+        if (currRingAlarmIndex !== index) {
+            playAlarmSound();
+            setAlarmScreenVisible(true);
+            setCurrRingAlarmIndex(index);
+        }
 
+    }
 
     const ringAlarm = (timeDate, index) => {
 
@@ -283,36 +292,38 @@ export default function Alarm() {
             { cancelable: false, }
 
         );
-
-
     }
     //////////////////////////////////////////////////
 
     const [alarmScreenVisible, setAlarmScreenVisible] = useState(false)
+
+    const handleQuitAlarmScreen = () => {
+    }
 
     const handleDisabledAlarm = (index) => {
         setListOfAlarm(dismissAlarm(index, listOfAlarm));
     }
 
     const handleDismissedAlarm = (index) => {
-        // if (mathGameSolved) {
-        //     stopAlarmSound();
-        //     dismissAlarmSound();
-        //     setListOfAlarm(dismissAlarm(index, listOfAlarm));
-        // } else {
-        //     setMathGameVisible(true);
-        // }
+        if (mathGameSolved) {
+            stopAlarmSound();
+            dismissAlarmSound();
+            setListOfAlarm(dismissAlarm(index, listOfAlarm));
+            setCurrRingAlarmIndex(-1);
+            setAlarmScreenVisible(false);
+        } else {
+            Alert.alert("Solve the math puzzle !!!")
+        }
 
-        stopAlarmSound();
-        setListOfAlarm(dismissAlarm(index, listOfAlarm));
     }
 
     const handleSnoozedAlarm = (index) => {
         stopAlarmSound();
+        setAlarmScreenVisible(false);
         console.log(listOfAlarm);
 
         setListOfAlarm(snoozeAlarm(index, listOfAlarm));
-
+        setCurrRingAlarmIndex(-1);
         console.log(listOfAlarm);
     }
 
@@ -321,9 +332,13 @@ export default function Alarm() {
     const [mathGameVisible, setMathGameVisible] = useState(false);
     const [mathGameSolved, setMathGameSolved] = useState(false);
 
-    // useEffect(() => {
-    //     { mathGameSolved && handleDismissedAlarm }
-    // }, [mathGameSolved])
+    useEffect(() => {
+        if (mathGameSolved) {
+            handleDismissedAlarm(currRingAlarmIndex);
+        } else {
+
+        }
+    }, [mathGameSolved])
 
 
 
@@ -436,6 +451,59 @@ export default function Alarm() {
             <View style={styles.time}>
                 <Text style={styles.timeFont}>
                     {checkAlarm()}
+                    {alarmScreenVisible &&
+                        <Modal
+                            isVisible={alarmScreenVisible}
+                            onRequestClose={() => handleQuitAlarmScreen}
+                            animationIn='rubberBand'
+                            animationOut='fadeOut'
+                            swipeDirection='down'
+                            style={{ margin: 30 }}
+                            onSwipeComplete={() => handleQuitAlarmScreen}
+                            hideModalContentWhileAnimating={true}
+                        //coverScreen = {false}
+
+                        >
+
+                            <View style={styles.container}>
+                                <MathGame
+                                    mathGameVisible={alarmScreenVisible}
+                                    setMathGameVisible={setMathGameVisible}
+                                    mathGameSolved={mathGameSolved}
+                                    setMathGameSolved={setMathGameSolved}
+                                />
+                                <View style={styles.button}>
+
+                                    <Button
+                                        color="blue"
+                                        title="Dismiss"
+                                        type="clear"
+                                        fontSize="15"
+                                        onPress={() => {
+                                            handleDismissedAlarm(currRingAlarmIndex)
+                                        }}
+                                    />
+                                    <Button
+                                        color="blue"
+                                        title="Snooze"
+                                        type="clear"
+                                        fontSize="15"
+                                        onPress={() => {
+                                            handleSnoozedAlarm(currRingAlarmIndex)
+                                        }}
+                                    />
+
+                                </View>
+
+
+                            </View>
+                        </Modal>
+
+                    }
+
+
+
+
                     {(!timeWheelVisible)
                         ? <TouchableOpacity
                             onPress={() => toggleTimeWheel()}
@@ -477,14 +545,7 @@ export default function Alarm() {
 
             </View>
 
-            {mathGameVisible &&
-                <MathGame
-                    mathGameVisible={mathGameVisible}
-                    setMathGameVisible={setMathGameVisible}
-                    mathGameSolved={mathGameSolved}
-                    setMathGameSolved={setMathGameSolved}
-                />
-            }
+
         </View>
     );
 }
@@ -536,5 +597,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingBottom: 30
-    }
+    },
+    modalcontainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+    },
+    button: {
+        width: 0.7 * Dimensions.get('window').width,
+
+        flexDirection: "row",
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'flex-end',
+        alignContent: 'center',
+    },
 });
