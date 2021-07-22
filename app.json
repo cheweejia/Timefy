@@ -29,16 +29,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      [
-        "expo-notifications",
-        {
-          "sounds": [
-            "components/Sound/"
-          ]
-        }
-      ]
-    ]
+    }
+
+
   }
 }
