@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Text, View, StyleSheet, Animated, Dimensions, TouchableOpacity } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import { Audio } from 'expo-av'
+import Modal from 'react-native-modal'
 
 function StartButton({ title, color, background, onPress }) {
     return (
@@ -34,9 +36,88 @@ export default function Pomodoro() {
     const [start, setStart] = useState(false)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isBreak, setIsBreak] = useState(false)
+    const [timesUp, setTimesUp] = useState(false)
     const [minutes, setMinutes] = useState(25)
     const [interval, setInterval] = useState(1)
     const [key, setKey] = useState(0)
+
+    /** Alarm Management **/
+    useEffect(() => {
+        try {
+          Audio.setAudioModeAsync({
+              allowRecordingIOS: false,
+              interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+              playsInSilentModeIOS: true,
+              interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+              shouldDuckAndroid: true,
+              staysActiveInBackground: true,
+              playThroughEarpieceAndroid: false
+          });
+
+          loadAudio();
+        } catch (e) {
+          console.log(e);
+        }
+    }, [])
+
+      const [currentItem, setCurrentItem] = useState(0);
+      const [isAlarmPlaying, setIsAlarmPlaying] = useState(false);
+      const [volume, setVolume] = useState(1.0);
+      const [isBuffering, setIsBuffering] = useState(false)
+      const [playbackInstance, setPlayBackInstance] = useState(null);
+
+      const loadAudio = async () => {
+          try {
+              const sound = new Audio.Sound();
+
+              //playbackInstance.createAsync(require('./Sound/1.mp3'), status);
+
+              const status = {
+                  shouldPlay: isAlarmPlaying,
+                  volume
+              }
+
+              sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate(status))
+              await sound.loadAsync(require('./Sound/11.mp3'), status, true)
+
+              setPlayBackInstance(sound);
+
+              console.log("loaded")
+          } catch (e) {
+              console.log(e);
+          }
+      }
+
+      const onPlaybackStatusUpdate = (status) => {
+          const newStatus = status.isBuffering;
+          setIsBuffering(newStatus);
+      }
+
+      const toggleAlarmSound = async () => {
+          isAlarmPlaying ? await playbackInstance.pauseAsync() : await playbackInstance.playAsync()
+
+          setIsAlarmPlaying(!isAlarmPlaying);
+      }
+
+      const stopAlarmSound = async () => {
+        try {
+            console.log('stop alarm sound')
+            await playbackInstance.stopAsync()
+            setIsAlarmPlaying(false);
+        } catch(e) {
+            console.log(e)
+        }
+      }
+
+      const playAlarmSound = async () => {
+          console.log('playing alarm sound')
+          await playbackInstance.playAsync()
+          setIsAlarmPlaying(true);
+      }
+
+      const dismissAlarmSound = async () => {
+          playbackInstance.unloadAsync();
+      }
 
     const proceed = () => {
         setStart(true)
@@ -60,6 +141,16 @@ export default function Pomodoro() {
         setKey(prevKey => prevKey + 1)
     }
 
+    const handleTimesUp = () => {
+        setTimesUp(true)
+        playAlarmSound()
+      }
+
+      const dismiss = () => {
+        stopAlarmSound()
+        reset()
+      }
+
     return (
         <View style={styles.container}>
             <View style={styles.countdownTimer}>
@@ -82,6 +173,7 @@ export default function Pomodoro() {
                             setMinutes(25)
                         }
                         setKey(prevKey => prevKey + 1)
+                        handleTimesUp()
                     }}
                 >
                     {({ remainingTime, animatedColor }) => {
@@ -104,6 +196,28 @@ export default function Pomodoro() {
                     }}
                 </CountdownCircleTimer>
             </View>
+
+            { timesUp && (
+                <Modal
+                    isVisible={timesUp}
+                    onRequestClose={() => dismiss()}
+                    animationIn='fadeIn'
+                    animationOut='fadeOut'
+                    swipeDirection='right'
+                    style={{ flex: 1, }}
+                    onSwipeComplete={() => dismiss()}
+                    hideModalContentWhileAnimating={true}
+                >
+                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                        <TouchableOpacity
+                            style={{borderRadius: 10, height: 50, width: 150, backgroundColor: '#cfcfcf', alignItems: 'center', justifyContent: 'center'}}
+                            onPress={() => dismiss()}
+                        >
+                            <Text style={{fontSize: 20, }}>Dismiss</Text>
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
+            )}
 
             { !start && !isPlaying && (
                 <View>

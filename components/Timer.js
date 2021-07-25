@@ -1,8 +1,10 @@
-import React, { Component, useState } from 'react'
-import { Animated, StyleSheet, View, Text, TouchableOpacity, FlatList, Dimensions } from 'react-native'
+import React, { Component, useState, useEffect } from 'react'
+import { Animated, StyleSheet, View, Text, TouchableOpacity, FlatList, Dimensions, Button } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 //import ToggleSwitch from 'toggle-switch-react-native'
 import Pomodoro from "./Pomodoro"
+import { Audio } from 'expo-av'
+import Modal from 'react-native-modal'
 
 const numOfHours = [...Array(24).keys()]
 const minSec = [...Array(60).keys()]
@@ -75,52 +77,140 @@ function ButtonsRow({ children }) {
   )
 }
 
-export default class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-      start: false,
-      isPlaying: false,
-      pomodoro: false,
+export default function Timer() {
+  const [hours, setHours] = useState(0)
+  const [minutes, setMinutes] = useState(0)
+  const [seconds, setSeconds] = useState(0)
+  const [start, setStart] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [pomodoro, setPomodoro] = useState(false)
+  const [timesUp, setTimesUp] = useState(false)
+
+//  constructor(props) {
+//    super(props)
+//    this.state = {
+//      hours: 0,
+//      minutes: 0,
+//      seconds: 0,
+//      start: false,
+//      isPlaying: false,
+//      pomodoro: false,
+//      timesUp: false,
+//    }
+//  }
+
+  const startTimer = () => {
+    if (hours != 0 || minutes != 0 || seconds != 0) {
+      setStart(true)
+      setIsPlaying(true)
     }
   }
 
-  start = () => {
-    if (this.state.hours != 0 || this.state.minutes != 0 || this.state.seconds != 0) {
-      this.setState({
-        start: true,
-        isPlaying: true,
-      })
+  const pause = () => {
+    setIsPlaying(false)
+  }
+
+  const resume = () => {
+    setIsPlaying(true)
+  }
+
+  const reset = () => {
+    setHours(0)
+    setMinutes(0)
+    setSeconds(0)
+    setStart(false)
+    setIsPlaying(false)
+    setTimesUp(false)
+  }
+
+  /** Sound Management **/
+  useEffect(() => {
+      try {
+          Audio.setAudioModeAsync({
+              allowRecordingIOS: false,
+              interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+              playsInSilentModeIOS: true,
+              interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+              shouldDuckAndroid: true,
+              staysActiveInBackground: true,
+              playThroughEarpieceAndroid: false
+          });
+
+          loadAudio();
+      } catch (e) {
+          console.log(e);
+      }
+  }, [])
+
+  const [currentItem, setCurrentItem] = useState(0);
+  const [isAlarmPlaying, setIsAlarmPlaying] = useState(false);
+  const [volume, setVolume] = useState(1.0);
+  const [isBuffering, setIsBuffering] = useState(false)
+  const [playbackInstance, setPlayBackInstance] = useState(null);
+
+  const loadAudio = async () => {
+      try {
+          const sound = new Audio.Sound();
+
+          //playbackInstance.createAsync(require('./Sound/1.mp3'), status);
+
+          const status = {
+              shouldPlay: isAlarmPlaying,
+              volume
+          }
+
+          sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate(status))
+          await sound.loadAsync(require('./Sound/11.mp3'), status, true)
+
+          setPlayBackInstance(sound);
+
+          console.log("loaded")
+      } catch (e) {
+          console.log(e);
+      }
+  }
+
+  const onPlaybackStatusUpdate = (status) => {
+      const newStatus = status.isBuffering;
+      setIsBuffering(newStatus);
+  }
+
+  const toggleAlarmSound = async () => {
+      isAlarmPlaying ? await playbackInstance.pauseAsync() : await playbackInstance.playAsync()
+
+      setIsAlarmPlaying(!isAlarmPlaying);
+  }
+
+  const stopAlarmSound = async () => {
+    try {
+        console.log('stop alarm sound')
+        await playbackInstance.stopAsync()
+        setIsAlarmPlaying(false);
+    } catch(e) {
+        console.log(e)
     }
   }
 
-  pause = () => {
-    this.setState({
-      isPlaying: false,
-    })
+  const playAlarmSound = async () => {
+      console.log('playing alarm sound')
+      await playbackInstance.playAsync()
+      setIsAlarmPlaying(true);
   }
 
-  resume = () => {
-    this.setState({
-      isPlaying: true,
-    })
+  const dismissAlarmSound = async () => {
+      playbackInstance.unloadAsync();
   }
 
-  reset = () => {
-    this.setState({
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-      start: false,
-      isPlaying: false,
-    })
+  const handleTimesUp = () => {
+    setTimesUp(true)
+    playAlarmSound()
   }
 
-  render() {
-    const { start, isPlaying, hours, minutes, seconds, pomodoro } = this.state
+  const dismiss = () => {
+    stopAlarmSound()
+    reset()
+  }
+
     return (
       <View style={styles.container}>
         { !start && (
@@ -128,10 +218,30 @@ export default class App extends Component {
               title='Pomodoro'
               color='white'
               background={pomodoro ? 'tomato' : '#CFCFCF'}
-              onPress={() => this.setState({
-                pomodoro: !pomodoro,
-              })}
+              onPress={() => setPomodoro(!pomodoro)}
             />
+        )}
+
+        { timesUp && (
+            <Modal
+                isVisible={timesUp}
+                onRequestClose={() => dismiss()}
+                animationIn='fadeIn'
+                animationOut='fadeOut'
+                swipeDirection='right'
+                style={{ flex: 1, }}
+                onSwipeComplete={() => dismiss()}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+                    <TouchableOpacity
+                        style={{borderRadius: 10, height: 50, width: 150, backgroundColor: '#cfcfcf', alignItems: 'center', justifyContent: 'center'}}
+                        onPress={() => dismiss()}
+                    >
+                        <Text style={{fontSize: 20, }}>Dismiss</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         )}
 
         { !start && !isPlaying && !pomodoro && (
@@ -152,9 +262,7 @@ export default class App extends Component {
                   }}
                   onMomentumScrollEnd={ev => {
                     const index = Math.round(ev.nativeEvent.contentOffset.y / 50)
-                    this.setState({
-                      hours: numOfHours[index]
-                    })
+                    setHours(numOfHours[index])
                   }}
                   renderItem={({ item, index }) => {
                     const pad = (n) => n < 10 ? '0' + n : n
@@ -181,9 +289,7 @@ export default class App extends Component {
                   }}
                   onMomentumScrollEnd={ev => {
                     const index = Math.round(ev.nativeEvent.contentOffset.y / 50)
-                    this.setState({
-                      minutes: minSec[index]
-                    })
+                      setMinutes(minSec[index])
                   }}
                   renderItem={({ item, index }) => {
                     const pad = (n) => n < 10 ? '0' + n : n
@@ -210,9 +316,7 @@ export default class App extends Component {
                   }}
                   onMomentumScrollEnd={ev => {
                     const index = Math.round(ev.nativeEvent.contentOffset.y / 50)
-                    this.setState({
-                      seconds: minSec[index]
-                    })
+                    setSeconds(minSec[index])
                   }}
                   renderItem={({ item, index }) => {
                     const pad = (n) => n < 10 ? '0' + n : n
@@ -229,7 +333,7 @@ export default class App extends Component {
               title='Start'
               color='#50D167'
               background='#1B361F'
-              onPress={this.start} />
+              onPress={() => startTimer()} />
           </View>
         )}
 
@@ -244,7 +348,7 @@ export default class App extends Component {
                 ['#A30000', 0.2],
               ]}
               size={Dimensions.get('window').width * 0.9}
-              onComplete={this.reset}
+              onComplete={() => handleTimesUp()}
             >
               {({ remainingTime, animatedColor }) => {
                 const pad = (n) => n < 10 ? '0' + n : n
@@ -267,12 +371,12 @@ export default class App extends Component {
                 title='Pause'
                 color='#E33935'
                 background='#3C1715'
-                onPress={this.pause} />
+                onPress={() => pause()} />
               <RoundButton
                 title='Reset'
                 color='#FFFFFF'
                 background='#3D3D3D'
-                onPress={this.reset} />
+                onPress={() => reset()} />
             </ButtonsRow>
           )}
 
@@ -282,12 +386,12 @@ export default class App extends Component {
                 title='Resume'
                 color='#50D167'
                 background='#1B361F'
-                onPress={this.resume} />
+                onPress={() => resume()} />
               <RoundButton
                 title='Reset'
                 color='#FFFFFF'
                 background='#3D3D3D'
-                onPress={this.reset} />
+                onPress={() => reset()} />
             </ButtonsRow>
           )}
 
@@ -296,7 +400,6 @@ export default class App extends Component {
           )}
         </View>
     )
-  }
 }
 
 const styles = StyleSheet.create({
@@ -361,5 +464,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
+  },
+  button2: {
+      width: 0.7 * Dimensions.get('window').width,
+      flexDirection: "row",
+      backgroundColor: '#FFFFFF',
+      justifyContent: 'flex-end',
+      alignContent: 'center',
   },
 })
