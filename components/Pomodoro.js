@@ -139,6 +139,7 @@ export default function Pomodoro() {
         setMinutes(25)
         setInterval(1)
         setKey(prevKey => prevKey + 1)
+        setTimesUp(false)
     }
 
     const handleTimesUp = () => {
@@ -148,7 +149,7 @@ export default function Pomodoro() {
 
       const dismiss = () => {
         stopAlarmSound()
-        reset()
+        setTimesUp(false)
       }
 
     return (
