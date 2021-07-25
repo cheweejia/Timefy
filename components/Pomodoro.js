@@ -40,6 +40,7 @@ export default function Pomodoro() {
     const [minutes, setMinutes] = useState(25)
     const [interval, setInterval] = useState(1)
     const [key, setKey] = useState(0)
+    const [help, setHelp] = useState(false)
 
     /** Alarm Management **/
     useEffect(() => {
@@ -154,6 +155,32 @@ export default function Pomodoro() {
 
     return (
         <View style={styles.container}>
+            <Modal
+                isVisible={help}
+                onRequestClose={() => setHelp(false)}
+                animationIn='fadeIn'
+                animationOut='fadeOut'
+                swipeDirection={['right','left','down']}
+                style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}
+                onSwipeComplete={() => setHelp(false)}
+                hideModalContentWhileAnimating={true}
+                backdropColor='#cfcfcf'
+            >
+                <View
+                    style={{padding: 10, backgroundColor: '#ffffff', borderRadius: 5, }}
+                >
+                    <Text
+                        style={{fontSize: 15, backgroundColor: "#ffffff", textAlign: 'center'}}
+                    >
+                        The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s.
+                        The technique uses a timer to break down work into intervals, traditionally 25 minutes in length,
+                        separated by short breaks, usually 5 minutes in length. The Pomodoro Technique helps you resist
+                        distractions and re-train your brains to focus. Each pomodoro is dedicated to one
+                        task and each break is a chance to reset and bring your attention back to what you should be
+                        working on.
+                    </Text>
+                </View>
+            </Modal>
             <View style={styles.countdownTimer}>
                 <CountdownCircleTimer
                     key={key}
@@ -192,6 +219,16 @@ export default function Pomodoro() {
                                 <Animated.Text style={{ color: animatedColor, fontSize: 40 }}>
                                     {pad(minutes)}:{pad(seconds)}
                                 </Animated.Text>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        setHelp(true)
+                                    }
+                                    style={styles.help}
+                                >
+                                    <Text style={{color: '#ffffff'}}>
+                                        ?
+                                    </Text>
+                                </TouchableOpacity>
                             </>
                         )
                     }}
@@ -302,5 +339,13 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
+    },
+    help: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 30,
+        height: 30,
+        backgroundColor: 'rgba(207,207,207,0.7)',
+        borderRadius: 15,
     },
 })
