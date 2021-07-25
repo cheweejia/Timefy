@@ -1,5 +1,6 @@
 import React, { useEffect, useState, } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 export function getTime(currDate) {
     const currHour = convertTime(currDate.getHours());
@@ -103,4 +104,32 @@ export function resetOverflowTime(time){
     const newHr = currHr -24;
 
     return newHr + ":" + currMin + ":" + currSec;
+}
+
+export function checkSecondDifference(alarm) {
+
+    const dateArray = alarm.date.split(" ")
+    const timeArray = alarm.time.split( ":")
+    console.log("DateArray" + JSON.stringify(dateArray))
+    console.log("timeArray" + JSON.stringify(timeArray))
+    const alarmDay = new Date(dateArray[2], monthToIndex(dateArray[1]), dateArray[0], timeArray[0], timeArray[1], timeArray[2]).getTime();
+
+    const now = new Date().getTime();
+
+    console.log(alarmDay + "       " + now)
+    return (alarmDay - now)/1000 ;
+}
+
+export function checkSecondDifference2(date, time) {
+
+    const dateArray = date.split(" ")
+    const timeArray = time.split( ":")
+    console.log("DateArray" + JSON.stringify(dateArray))
+    console.log("timeArray" + JSON.stringify(timeArray))
+    const alarmDay = new Date(dateArray[2], monthToIndex(dateArray[1]), dateArray[0], timeArray[0], timeArray[1], timeArray[2]).getTime();
+
+    const now = new Date().getTime();
+
+    console.log(alarmDay + "       " + now)
+    return (alarmDay - now)/1000 ;
 }

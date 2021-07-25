@@ -4,10 +4,11 @@ import { Picker } from '@react-native-picker/picker';
 import { Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { getTimeForAlarmSettings, getDate} from "../TimeTools";
+import { getTimeForAlarmSettings, getDate, checkSecondDifference2, getTime } from "../TimeTools";
 
 import Modal from 'react-native-modal';
-import { changeSnoozeDuration, changeRepeatDay, changeDate, changeTime } from '../AlarmManagementTools'
+import { changeSnoozeDuration, changeRepeatDay, changeDate, changeTime  } from '../AlarmManagementTools'
+import { Alert } from 'react-native';
 
 
 function AlarmSetting(props) {
@@ -64,15 +65,20 @@ function AlarmSetting(props) {
         //console.log('SAVE ALL CHANGE LOG 1')
         //console.log(changeSnoozeDuration(alarmIndex, listOfAlarm, snoozeDuration));
 
-        const newRepeat = [sun, mon, tues, wed, thur, fri, sat];
-        setAlarmSettingVisible(!alarmSettingVisible);
+        if (checkSecondDifference2(currDate, currTime) < 0) {
+            const now = new Date();
+            Alert.alert("Please select an alarm that rings after " + getTime(now) + " " + getDate(now));
+        } else {
+            const newRepeat = [sun, mon, tues, wed, thur, fri, sat];
+            setAlarmSettingVisible(!alarmSettingVisible);
 
-        const newTimeList = changeTime(alarmIndex, listOfAlarm, currTime)
-        const newDateList = changeDate(alarmIndex, newTimeList, currDate)
-        const newSnoozeList = changeSnoozeDuration(alarmIndex, newDateList, snoozeDuration)
-        const newRepeatList = changeRepeatDay(alarmIndex, newSnoozeList, newRepeat)
+            const newTimeList = changeTime(alarmIndex, listOfAlarm, currTime)
+            const newDateList = changeDate(alarmIndex, newTimeList, currDate)
+            const newSnoozeList = changeSnoozeDuration(alarmIndex, newDateList, snoozeDuration)
+            const newRepeatList = changeRepeatDay(alarmIndex, newSnoozeList, newRepeat)
 
-        setListOfAlarm(newRepeatList);
+            setListOfAlarm(newRepeatList);
+        }
     }
 
     const discardAllChanges = () => {
@@ -208,7 +214,7 @@ function AlarmSetting(props) {
 
                         <View>
                             <TouchableOpacity
-                             onPress={() => showDatePicker()}>
+                                onPress={() => showDatePicker()}>
                                 <Text style={styles.currDate}> {currDate} </Text>
                             </TouchableOpacity>
                         </View>

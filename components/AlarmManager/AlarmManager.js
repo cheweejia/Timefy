@@ -10,6 +10,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import SleepCalculator from './SleepCalculator/SleepCalculator';
 import { Switch, Checkbox } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Alert } from 'react-native';
 
 function AlarmManager(props) {
 
@@ -30,8 +31,16 @@ function AlarmManager(props) {
 
     const handleConfirm = (date) => {
         //console.warn("Alarmed set at", getTime(date));
-        handleNewAlarm(getTime(date), getDate(date));
-        hideDatePicker();
+        const currTime = new Date();
+        if (date.getTime() - currTime.getTime() < 0) {
+            Alert.alert("Please set an alarm that is after  " + getTime(currTime) + " "+ getDate(currTime));
+            hideDatePicker();
+
+        }
+        else {
+            handleNewAlarm(getTime(date), getDate(date));
+            hideDatePicker();
+        }
     };
 
     /////////////////////////////////////////////////////////////
@@ -59,7 +68,7 @@ function AlarmManager(props) {
 
                     <View key={index} style={{
                         //backgroundColor: alarm.isDelete ? 'rgba(96, 108, 218, 0.5)' : 'transparent',
-                        backgroundColor:'transparent',
+                        backgroundColor: 'transparent',
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: "center",
@@ -87,7 +96,7 @@ function AlarmManager(props) {
                                 {alarm.time.slice(0, 5)}
                             </Text>
                             <Text style={styles.dateText}>
-                                { getDayOfWeek(alarm.date) + ", " + alarm.date.slice(0, 6)}
+                                {getDayOfWeek(alarm.date) + ", " + alarm.date.slice(0, 6)}
                             </Text>
                         </View>
 
