@@ -43,10 +43,10 @@ async function schedulePushNotification(time) {
             data: { data: 'goes here' },
             sound: '1.wav',
             priority: 'high',
-            vibrationPattern : [0, 250, 250, 250]
+            vibrationPattern: [0, 250, 250, 250]
         },
-        trigger: { seconds: time , channelId: 'default', repeats: false },
-        
+        trigger: { seconds: time, channelId: 'default', repeats: false },
+
     });
 }
 
@@ -117,7 +117,7 @@ export default function Alarm() {
 
     const scheduleAlarmNotification = () => {
         const size = listOfAlarm.length;
-        for(var i = 0; i < size; i ++) {
+        for (var i = 0; i < size; i++) {
             console.log(checkSecondDifference(listOfAlarm[i]))
             schedulePushNotification(checkSecondDifference(listOfAlarm[i]));
         }
@@ -172,7 +172,7 @@ export default function Alarm() {
     }, [listOfAlarm])
 
     /////////////////////////////////////////////////////
-    
+
     const handleRingAlarmAndCancelNotif = (index) => {
         cancelPushNotification();
         handleRingAlarm(index);
@@ -181,7 +181,7 @@ export default function Alarm() {
     const checkPastAlarm = () => {
         if (listOfAlarm !== undefined) {
             for (var i = 0; i < listOfAlarm.length; i++) {
-                checkSecondDifference(listOfAlarm[i]) < 0 
+                checkSecondDifference(listOfAlarm[i]) < 0
                     ? handleRingAlarmAndCancelNotif(i)
                     : {}
             }
@@ -208,6 +208,12 @@ export default function Alarm() {
 
     const handleRingAlarm = (index) => {
         if (currRingAlarmIndex !== index) {
+
+            try {
+                playAlarmSound()
+            } catch (e) {
+                console.log("error for play sound " + e);
+            }
             playAlarmSound();
             setAlarmScreenVisible(true);
             setCurrRingAlarmIndex(index);
@@ -247,12 +253,12 @@ export default function Alarm() {
     const handleDismissedAlarm = (index) => {
         if (mathGameSolved) {
             stopAlarmSound();
-            dismissAlarmSound();
+            // dismissAlarmSound();
             setListOfAlarm(dismissAlarm(index, listOfAlarm));
             setCurrRingAlarmIndex(-1);
             setAlarmScreenVisible(false);
         } else {
-            Alert.alert("Solve the math puzzle !!!")
+            Alert.alert("Please solve the math puzzle and click 'OK' ")
         }
 
     }
@@ -297,6 +303,7 @@ export default function Alarm() {
             });
 
             loadAudio();
+            console.log("audio loaded")
         } catch (e) {
             console.log(e);
         }
@@ -356,12 +363,24 @@ export default function Alarm() {
 
     const playAlarmSound = async () => {
         console.log('plauying alarm sound')
-        await playbackInstance.playAsync()
-        setIsPlaying(true);
+        if (playbackInstance !== null) {
+            await playbackInstance.playAsync()
+            setIsPlaying(true);
+        }
+        else {
+            loadAudio();
+            await playbackInstance.playAsync()
+            setIsPlaying(true);
+        }
     }
 
     const dismissAlarmSound = async () => {
-        playbackInstance.unloadAsync();
+
+        try {
+            await playbackInstance.unloadAsync();
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     /////////////////////////////////////////TIMEWHEEL MANAGEMENT

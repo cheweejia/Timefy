@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: (Dimensions.get('window').height * 0.10),
+        paddingTop: (Dimensions.get('window').height * 0.05),
         paddingHorizontal: 20,
     },
     button: {
