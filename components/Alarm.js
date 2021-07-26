@@ -175,6 +175,22 @@ export default function Alarm() {
 
     const handleRingAlarmAndCancelNotif = (index) => {
         cancelPushNotification();
+        // try {
+        //     Audio.setAudioModeAsync({
+        //         allowRecordingIOS: false,
+        //         interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+        //         playsInSilentModeIOS: true,
+        //         interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+        //         shouldDuckAndroid: true,
+        //         staysActiveInBackground: true,
+        //         playThroughEarpieceAndroid: false
+        //     });
+
+        //     loadAudio();
+        //     console.log("audio loaded")
+        // } catch (e) {
+        //     console.log(e);
+        // }
         handleRingAlarm(index);
     }
 
@@ -214,7 +230,6 @@ export default function Alarm() {
             } catch (e) {
                 console.log("error for play sound " + e);
             }
-            playAlarmSound();
             setAlarmScreenVisible(true);
             setCurrRingAlarmIndex(index);
         }
@@ -253,7 +268,7 @@ export default function Alarm() {
     const handleDismissedAlarm = (index) => {
         if (mathGameSolved) {
             stopAlarmSound();
-            // dismissAlarmSound();
+            dismissAlarmSound();
             setListOfAlarm(dismissAlarm(index, listOfAlarm));
             setCurrRingAlarmIndex(-1);
             setAlarmScreenVisible(false);
@@ -310,11 +325,13 @@ export default function Alarm() {
     }, [])
 
 
+
+
     const [currentItem, setCurrentItem] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(1.0);
     const [isBuffering, setIsBuffering] = useState(false)
-    const [playbackInstance, setPlayBackInstance] = useState(null);
+    const [playbackInstance, setPlayBackInstance] = useState()
 
     const loadAudio = async () => {
         try {
@@ -363,15 +380,15 @@ export default function Alarm() {
 
     const playAlarmSound = async () => {
         console.log('plauying alarm sound')
-        if (playbackInstance !== null) {
-            await playbackInstance.playAsync()
-            setIsPlaying(true);
+        if (playbackInstance === undefined) {
+            console.log("UNDEFINEEDDDDD AUDIO ")
+            loadAudio()
         }
-        else {
-            loadAudio();
-            await playbackInstance.playAsync()
-            setIsPlaying(true);
-        }
+        setTimeout( () => {playbackInstance.playAsync()}, 2000);
+        setIsPlaying(true);
+
+
+
     }
 
     const dismissAlarmSound = async () => {
@@ -487,7 +504,7 @@ export default function Alarm() {
                 {/* <TouchableOpacity
                     onPress={() => {
 
-                        schedulePushNotification(2)
+                        playAlarmSound()
                     }}>
                     <Text style={styles.timeFont}>ply</Text>
                 </TouchableOpacity>
@@ -495,8 +512,15 @@ export default function Alarm() {
                 <TouchableOpacity
                     onPress={() => {
 
-                        //schedulePushNotification()
-                        cancelPushNotification();
+                        stopAlarmSound()
+                    }}>
+                    <Text style={styles.timeFont}>stop</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => {
+
+                        dismissAlarmSound()
                     }}>
                     <Text style={styles.timeFont}>stop</Text>
                 </TouchableOpacity> */}

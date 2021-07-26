@@ -101,7 +101,7 @@ function AlarmSetting(props) {
 
     const handleTimeConfirm = (date) => {
         //console.warn("Alarmed set at", getTime(date));
-        setCurrTime(getTimeForAlarmSettings(date));
+        setCurrTime(getTime(date));
         hideTimePicker();
     };
 
