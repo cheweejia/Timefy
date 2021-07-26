@@ -20,7 +20,7 @@ function ButtonsRow({ children }) {
     )
 }
 
-function NumberPad({ zero, one, two, three, four, five, six, seven, eight, nine, negative, check }) {
+function NumberPad({ zero, one, two, three, four, five, six, seven, eight, nine, negative, check, clear }) {
     return (
         <View style={styles.numberPad}>
             <ButtonsRow>
@@ -46,11 +46,22 @@ function NumberPad({ zero, one, two, three, four, five, six, seven, eight, nine,
                 <Button onPress={zero} title='0' />
                 <TouchableOpacity
                     style={styles.button}
+                    onPress={clear}
+                >
+                    <Text style={styles.del}>DEL</Text>
+                </TouchableOpacity>
+            </ButtonsRow>
+
+            <View style={{alignItems: 'center', paddingTop: 15, }}>
+
+                <TouchableOpacity
+                    style={styles.button}
                     onPress={check}
                 >
                     <Text style={styles.ok}>OK</Text>
                 </TouchableOpacity>
-            </ButtonsRow>
+
+            </View>
         </View>
     )
 }
@@ -120,6 +131,18 @@ export default function MathGame(props) {
         }
     }
 
+    const clear = () => {
+        if (display != "") {
+            if (display == "-") {
+                setNegative(false)
+                setDisplay("")
+            } else {
+                setInput(prevState => Math.trunc(prevState/10))
+                setDisplay(prevState => prevState.slice(0, prevState.length - 1))
+            }
+        }
+    }
+
     return (
         <View>
             {/* <Modal
@@ -136,7 +159,7 @@ export default function MathGame(props) {
             > */}
 
                 <View style={styles.container}>
-                    <Text style={styles.text}>{first} {firstOperator} {sec} {secOperator} {third}</Text>
+                    <Text style={styles.question}>{first} {firstOperator} {sec} {secOperator} {third}</Text>
                     <View style={styles.display}>
                         {correct == null ?
                             <Text style={styles.text}>{display}</Text>
@@ -158,6 +181,7 @@ export default function MathGame(props) {
                         nine={() => setValue(9)}
                         negative={() => negate()}
                         check={() => check()}
+                        clear={() => clear()}
                     />
                 </View>
                 {/* <Button 
@@ -185,8 +209,19 @@ const styles = StyleSheet.create({
     },
     ok: {
         color: 'black',
-        fontSize: 20,
+        fontSize: 30,
         textAlign: 'center',
+        width: 50,
+        height: 40,
+        justifyContent: 'center',
+    },
+    del: {
+        color: 'black',
+        fontSize: 24,
+        textAlign: 'center',
+        width: 50,
+        height: 40,
+        justifyContent: 'center',
     },
     button: {
         width: 50,
@@ -209,5 +244,11 @@ const styles = StyleSheet.create({
     },
     display: {
         height: Dimensions.get('window').height * 0.1,
+    },
+    question: {
+        color: 'black',
+        fontSize: 40,
+        textAlign: 'center',
+        width: Dimensions.get('window').width * 0.7,
     }
 })
