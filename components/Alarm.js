@@ -296,6 +296,7 @@ export default function Alarm() {
     useEffect(() => {
         if (mathGameSolved) {
             handleDismissedAlarm(currRingAlarmIndex);
+            setMathGameSolved(false)
         } else {
 
         }
@@ -434,9 +435,9 @@ export default function Alarm() {
                             onRequestClose={() => handleQuitAlarmScreen}
                             animationIn='rubberBand'
                             animationOut='fadeOut'
-                            swipeDirection='down'
+//                            swipeDirection='down'
                             style={{ margin: 30 }}
-                            onSwipeComplete={() => handleQuitAlarmScreen}
+//                            onSwipeComplete={() => handleQuitAlarmScreen}
                             hideModalContentWhileAnimating={true}
                         //coverScreen = {false}
 
